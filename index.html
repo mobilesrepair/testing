@@ -1,97 +1,391 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Repair Requests</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phone Repair Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .status-badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+        }
+        .status-progress {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+        .status-success {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+        .required-field:after {
+            content: " *";
+            color: red;
+        }
+        .whatsapp-btn {
+            background-color: #25D366;
+            color: white;
+        }
+        .whatsapp-btn:hover {
+            background-color: #128C7E;
+        }
+    </style>
 </head>
-<body class="bg-gray-50 p-6 min-h-screen">
+<body class="bg-gray-50 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold text-gray-800 mb-8">Phone Repair Management</h1>
+        
+        <!-- Repair Form -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h2 class="text-xl font-semibold mb-4 border-b pb-2">Repair Details</h2>
+            
+            <form id="repairForm" class="space-y-4">
+                <input type="hidden" id="repairId">
+                
+                <!-- Date -->
+                <div>
+                    <label for="date" class="block text-sm font-medium text-gray-700 mb-1 required-field">Date</label>
+                    <input type="date" id="date" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" required>
+                </div>
+                
+                <!-- Customer Name -->
+                <div>
+                    <label for="name" class="block text-sm font-medium text-gray-700 mb-1 required-field">Customer Name</label>
+                    <input type="text" id="name" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" required>
+                </div>
+                
+                <!-- Phone Number -->
+                <div>
+                    <label for="phone" class="block text-sm font-medium text-gray-700 mb-1 required-field">Phone Number</label>
+                    <input type="tel" id="phone" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" required>
+                </div>
+                
+                <!-- Device Model -->
+                <div>
+                    <label for="model" class="block text-sm font-medium text-gray-700 mb-1 required-field">Device Model</label>
+                    <input type="text" id="model" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" required>
+                </div>
+                
+                <!-- Device Issue -->
+                <div>
+                    <label for="issue" class="block text-sm font-medium text-gray-700 mb-1 required-field">Device Issue</label>
+                    <textarea id="issue" rows="3" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" required></textarea>
+                </div>
+                
+                <!-- Status -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1 required-field">Status</label>
+                    <div class="flex space-x-4">
+                        <label class="inline-flex items-center">
+                            <input type="radio" name="status" value="Progress" class="h-4 w-4 text-yellow-500 focus:ring-yellow-500 border-gray-300" checked required>
+                            <span class="ml-2">In Progress</span>
+                        </label>
+                        <label class="inline-flex items-center">
+                            <input type="radio" name="status" value="Success" class="h-4 w-4 text-green-500 focus:ring-green-500 border-gray-300">
+                            <span class="ml-2">Completed</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Current Update -->
+                <div id="updateField">
+                    <label for="currentUpdate" class="block text-sm font-medium text-gray-700 mb-1">Current Update</label>
+                    <textarea id="currentUpdate" rows="2" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" placeholder="Add any new updates about the repair..."></textarea>
+                </div>
+                
+                <!-- Form Actions -->
+                <div class="flex space-x-3 pt-4">
+                    <button type="button" id="clearBtn" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-md">
+                        Clear
+                    </button>
+                    <button type="submit" id="saveBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md">
+                        Save Repair
+                    </button>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Repairs List -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-xl font-semibold mb-4 border-b pb-2">Repair Records</h2>
+            
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="repairsTable" class="bg-white divide-y divide-gray-200">
+                        <!-- Repairs will be listed here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 
-  <h1 class="text-3xl font-bold mb-6">Request a Repair Service</h1>
+    <!-- Notification -->
+    <div id="notification" class="fixed bottom-4 right-4 hidden">
+        <div class="bg-blue-600 text-white px-4 py-2 rounded-md shadow-lg">
+            <i class="fas fa-check-circle mr-2"></i>
+            <span id="notificationText">Operation successful</span>
+        </div>
+    </div>
 
-  <form id="repairForm" class="bg-white p-6 rounded shadow-md max-w-md space-y-4">
-    <input name="name" type="text" placeholder="Your Name" required class="w-full p-2 border rounded" /><input name="phoneModel" type="text" placeholder="Phone Model" required class="w-full p-2 border rounded" />
-    <input name="imei" type="text" placeholder="IMEI Number" required class="w-full p-2 border rounded" />
-    <select name="issueType" required class="w-full p-2 border rounded">
-      <option value="" disabled selected>Select Issue Type</option>
-      <option value="Network Unlock">Network Unlock</option>
-      <option value="Xiaomi Flash">Xiaomi Flash</option>
-      <option value="Software Brick Fix">Software Brick Fix</option>
-      <option value="Auth Downgrade">Auth Downgrade</option>
-      <option value="Other">Other</option>
-    </select>
-    <input name="whatsapp" type="tel" placeholder="WhatsApp Number" required class="w-full p-2 border rounded" />
-    <button type="submit" class="bg-blue-600 text-white py-2 rounded w-full font-semibold hover:bg-blue-700">Submit Request</button>
-  </form>
-
-  <h2 class="text-2xl font-semibold mt-10 mb-4">Saved Requests</h2>
-  <div id="requestsList" class="max-w-md space-y-3"></div>
-
-<script>
-  const scriptURL = 'https://script.google.com/macros/s/AKfycbzCysPc1aczPQ4a4D-uouA0RGfGMFZeyTv6KkgAKiwbBNEvb2q7eP4Aff1JVsHzlcD0/exec';
-
-  const form = document.getElementById('repairForm');
-  const requestsList = document.getElementById('requestsList');
-  form.addEventListener('submit', async e => {
-    e.preventDefault();
-
-    const data = {
-      name: form.name.value,
-      phoneModel: form.phoneModel.value,
-      imei: form.imei.value,
-      issueType: form.issueType.value,
-      whatsapp: form.whatsapp.value
-    };
-
-    try {
-      const res = await fetch(scriptURL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      });
-      const result = await res.json();
-      if (result.result === 'success') {
-        alert('Request submitted successfully!');
-        form.reset();
-        loadRequests();
-      } else {
-        alert('Failed to submit request.');
-      }
-    } catch (err) {
-      alert('Error submitting form.');
-      console.error(err);
-    }
-  });
-
-  async function loadRequests() {
-    try {
-      const res = await fetch(scriptURL + '?action=get');
-      const data = await res.json();
-      requestsList.innerHTML = '';
-      if (data.requests && data.requests.length > 0) {
-        data.requests.forEach(r => {
-          const div = document.createElement('div');
-          div.className = 'p-3 border rounded bg-white';
-          div.innerHTML = `
-            <strong>r.name</strong> ({r.phoneModel})<br/>
-            IMEI: ${r.imei}<br/>Issue:{r.issueType}<br/>
-            WhatsApp: r.whatsapp<br/>
-            <em>{new Date(r.timestamp).toLocaleString()}</em>
-          `;
-          requestsList.appendChild(div);
+    <script>
+        // Repair data storage
+        let repairs = JSON.parse(localStorage.getItem('repairs')) || [];
+        
+        // DOM elements
+        const repairForm = document.getElementById('repairForm');
+        const saveBtn = document.getElementById('saveBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const repairsTable = document.getElementById('repairsTable');
+        
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set today's date as default
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('date').value = today;
+            
+            // Load existing repairs
+            renderRepairsTable();
+            
+            // Form submission
+            repairForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveRepair();
+            });
+            
+            // Clear form
+            clearBtn.addEventListener('click', clearForm);
         });
-      } else {
-        requestsList.textContent = 'No requests found.';
-      }
-    } catch (err) {
-      requestsList.textContent = 'Failed to load requests.';
-      console.error(err);
-    }
-  }
-
-  loadRequests();
-</script>
-
+        
+        // Save repair function
+        function saveRepair() {
+            // Get form values
+            const repairId = document.getElementById('repairId').value;
+            const currentUpdate = document.getElementById('currentUpdate').value;
+            const repairData = {
+                date: document.getElementById('date').value,
+                name: document.getElementById('name').value,
+                phone: document.getElementById('phone').value,
+                model: document.getElementById('model').value,
+                issue: document.getElementById('issue').value,
+                status: document.querySelector('input[name="status"]:checked').value,
+                updates: currentUpdate ? [{
+                    date: new Date().toLocaleDateString(),
+                    message: currentUpdate
+                }] : []
+            };
+            
+            // Validate required fields
+            if (!repairData.date || !repairData.name || !repairData.phone || !repairData.model || !repairData.issue) {
+                showNotification('Please fill all required fields', 'error');
+                return;
+            }
+            
+            if (repairId) {
+                // Update existing repair
+                const index = repairs.findIndex(r => r.id === repairId);
+                if (index !== -1) {
+                    // Preserve existing updates and add new one
+                    if (repairs[index].updates) {
+                        repairData.updates = [...repairs[index].updates, ...repairData.updates];
+                    }
+                    repairs[index] = { ...repairs[index], ...repairData };
+                    showNotification('Repair updated successfully');
+                    
+                    // If status changed to "Success", send completion message
+                    if (repairs[index].status === 'Success') {
+                        sendWhatsAppMessage(repairs[index], true);
+                    }
+                }
+            } else {
+                // Add new repair
+                const newRepair = {
+                    ...repairData,
+                    id: Date.now().toString(),
+                };
+                repairs.push(newRepair);
+                showNotification('Repair added successfully');
+            }
+            
+            // Save to localStorage
+            localStorage.setItem('repairs', JSON.stringify(repairs));
+            
+            // Refresh the table and clear form
+            renderRepairsTable();
+            clearForm();
+        }
+        
+        // Send WhatsApp message to client
+        function sendWhatsAppMessage(repair, isCompletion = false) {
+            // Format phone number (remove non-numeric characters)
+            const phone = repair.phone.replace(/\D/g, '');
+            
+            // Create message based on status
+            let message = '';
+            if (isCompletion) {
+                message = `Hi ${repair.name},\n\n` +
+                          `Your ${repair.model} repair is now complete and ready for collection! 🎉\n\n` +
+                          `Repair details: ${repair.issue}\n` +
+                          `Status: Completed ✅\n\n` +
+                          `Please visit us to collect your device.`;
+            } else {
+                message = `Hi ${repair.name},\n\n` +
+                          `Here's an update about your ${repair.model} repair:\n\n` +
+                          `${repair.updates[repair.updates.length - 1].message}\n\n` +
+                          `Current status: ${repair.status === 'Progress' ? 'In Progress 🛠️' : 'Completed ✅'}\n\n` +
+                          `We'll keep you updated on any further progress.`;
+            }
+            
+            // Encode the message for URL
+            const encodedMessage = encodeURIComponent(message);
+            
+            // Open WhatsApp with the message
+            window.open(`https://wa.me/${phone}?text=${encodedMessage}`, '_blank');
+        }
+        
+        // Render repairs table
+        function renderRepairsTable() {
+            repairsTable.innerHTML = '';
+            
+            if (repairs.length === 0) {
+                repairsTable.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="px-6 py-4 text-center text-gray-500">No repair records found</td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            repairs.forEach(repair => {
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-gray-50';
+                
+                row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap">${repair.date}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${repair.name}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${repair.phone}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="status-badge ${repair.status === 'Success' ? 'status-success' : 'status-progress'}">
+                            ${repair.status}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <button class="text-blue-600 hover:text-blue-900 mr-2 edit-btn" data-id="${repair.id}">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="whatsapp-btn hover:whatsapp-btn-hover text-white px-3 py-1 rounded-md mr-2 send-btn" data-id="${repair.id}">
+                            <i class="fab fa-whatsapp mr-1"></i>Send Update
+                        </button>
+                        <button class="text-red-600 hover:text-red-900 delete-btn" data-id="${repair.id}">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </td>
+                `;
+                
+                repairsTable.appendChild(row);
+            });
+            
+            // Add event listeners to edit buttons
+            document.querySelectorAll('.edit-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    loadRepair(this.dataset.id);
+                });
+            });
+            
+            // Add event listeners to WhatsApp buttons
+            document.querySelectorAll('.send-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const repairId = this.dataset.id;
+                    const repair = repairs.find(r => r.id === repairId);
+                    if (repair) {
+                        sendWhatsAppMessage(repair);
+                    }
+                });
+            });
+            
+            // Add event listeners to delete buttons
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    deleteRepair(this.dataset.id);
+                });
+            });
+        }
+        
+        // Load repair into form
+        function loadRepair(id) {
+            const repair = repairs.find(r => r.id === id);
+            if (!repair) return;
+            
+            document.getElementById('repairId').value = repair.id;
+            document.getElementById('date').value = repair.date;
+            document.getElementById('name').value = repair.name;
+            document.getElementById('phone').value = repair.phone;
+            document.getElementById('model').value = repair.model;
+            document.getElementById('issue').value = repair.issue;
+            document.querySelector(`input[name="status"][value="${repair.status}"]`).checked = true;
+            
+            // Show update field when editing existing repair
+            document.getElementById('updateField').classList.remove('hidden');
+            
+            // Scroll to form
+            repairForm.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // Delete repair
+        function deleteRepair(id) {
+            if (confirm('Are you sure you want to delete this repair record?')) {
+                repairs = repairs.filter(r => r.id !== id);
+                localStorage.setItem('repairs', JSON.stringify(repairs));
+                renderRepairsTable();
+                showNotification('Repair deleted successfully');
+                
+                // If deleting the currently edited repair, clear the form
+                if (document.getElementById('repairId').value === id) {
+                    clearForm();
+                }
+            }
+        }
+        
+        // Clear form
+        function clearForm() {
+            repairForm.reset();
+            document.getElementById('repairId').value = '';
+            document.getElementById('date').value = new Date().toISOString().split('T')[0];
+            document.getElementById('currentUpdate').value = '';
+            // Hide update field for new repairs
+            document.getElementById('updateField').classList.add('hidden');
+        }
+        
+        // Show notification
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            notification.className = `fixed bottom-4 right-4 bg-${type === 'error' ? 'red' : 'blue'}-600 text-white px-4 py-2 rounded-md shadow-lg flex items-center`;
+            
+            document.getElementById('notificationText').textContent = message;
+            notification.classList.remove('hidden');
+            
+            setTimeout(() => {
+                notification.classList.add('hidden');
+            }, 3000);
+        }
+    </script>
 </body>
 </html>
+    function saveDataToSheet(userData) {
+       var sheet = SpreadsheetApp.openById('https://script.google.com/macros/s/AKfycbzCysPc1aczPQ4a4D-uouA0RGfGMFZeyTv6KkgAKiwbBNEvb2q7eP4Aff1JVsHzlcD0/exec').getActiveSheet();
+       sheet.appendRow([userData.name, userData.email, userData.timestamp]);
+   }
+   
