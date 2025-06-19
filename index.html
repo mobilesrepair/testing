@@ -1,4 +1,4 @@
-```javascript
+javascript
 function doPost(e) {
   try {
     var ss = SpreadsheetApp.openById("1qAU4PG50gCnd_LR0V4WIOCDi3LPhhU_eXHSfdbIJJFS_qH7zPG7ei2jx");
@@ -32,3 +32,6 @@ function doPost(e) {
     return ContentService
       .createTextOutput(JSON.stringify({ result: "error", message: error.message }))
       .setMimeType(ContentService.MimeType.JSON)
+      .setHeader("Access-Control-Allow-Origin", "*");
+  }
+}
