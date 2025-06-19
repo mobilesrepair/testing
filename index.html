@@ -1,37 +1,60 @@
-javascript
-function doPost(e) {
-  try {
-    var ss = SpreadsheetApp.openById("1qAU4PG50gCnd_LR0V4WIOCDi3LPhhU_eXHSfdbIJJFS_qH7zPG7ei2jx");
-    var sheet = ss.getSheetByName("Sheet1");
-    if (!sheet) {
-      sheet = ss.insertSheet("Sheet1");
-      sheet.appendRow(["Timestamp", "Name", "Phone Model", "IMEI", "Issue Type", "WhatsApp"]);
-    }
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Phone Repair Request</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 flex flex-col items-center justify-center min-h-screen p-6">
+  <h1 class="text-3xl font-bold mb-6">Request a Repair Service</h1>
 
-    var data = JSON.parse(e.postData.contents);
+  <form id="repairForm" class="bg-white p-6 rounded shadow-md max-w-md w-full space-y-4">
+    <input name="name" type="text" placeholder="Your Name" required class="w-full p-2 border rounded" />
+    <input name="phoneModel" type="text" placeholder="Phone Model" required class="w-full p-2 border rounded" />
+    <input name="imei" type="text" placeholder="IMEI Number" required class="w-full p-2 border rounded" />
+    <select name="issueType" required class="w-full p-2 border rounded">
+      <option value="" disabled selected>Select Issue Type</option>
+      <option value="Network Unlock">Network Unlock</option>
+      <option value="Xiaomi Flash">Xiaomi Flash</option>
+      [02:33, 20/06/2025] ChatGPT: <option value="Software Brick Fix">Software Brick Fix</option>
+      <option value="Auth Downgrade">Auth Downgrade</option>
+      <option value="Other">Other</option>
+    </select>
+    <input name="whatsapp" type="tel" placeholder="WhatsApp Number" required class="w-full p-2 border rounded" />
+    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white w-full py-2 rounded font-semibold">Submit Request</button>
+  </form>
 
-    sheet.appendRow([
-      new Date(),
-      data.name || "",
-      data.phoneModel || "",
-      data.imei || "",
-      data.issueType || "",
-      data.whatsapp || ""
-    ]);
-
-    const response = {
-      result: "success"
-    };
-
-    return ContentService
-      .createTextOutput(JSON.stringify(response))
-      .setMimeType(ContentService.MimeType.JSON)
-      .setHeader("Access-Control-Allow-Origin", "*");
-
-  } catch (error) {
-    return ContentService
-      .createTextOutput(JSON.stringify({ result: "error", message: error.message }))
-      .setMimeType(ContentService.MimeType.JSON)
-      .setHeader("Access-Control-Allow-Origin", "*");
-  }
-}
+  <script>
+    const form = document.getElementById('repairForm');
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      const data = {
+        name: form.name.value,
+        phoneModel: form.phoneModel.value,
+        imei: form.imei.value,
+        issueType: form.issueType.value,
+        whatsapp: form.whatsapp.value
+      };
+      try {
+        const response = await fetch('https://script.google.com/macros/s/AKfycbxjSNSmlr-1jo7DSca58fLZAirvg_5VbVBSLw70IFkGF2DlA4M2HtU57-4bCwa6ODjbKA/exec', {
+          method: 'POST',
+          body: JSON.stringify(data),
+          headers: { 'Content-Type': 'application/json' }
+        });
+        const result = await response.json();
+        if (result.result === 'success') {
+          alert('Request submitted successfully!');
+          form.reset();
+        } else {
+[02:33, 20/06/2025] ChatGPT: alert('Failed to submit. Please try again.');
+        }
+      } catch {
+        alert('Error submitting form.');
+      }
+    });
+  </script>
+</body>
+</html>
+```
