@@ -40,10 +40,10 @@
       };
       try {
         const response = await fetch('https://script.google.com/macros/s/AKfycbzr0TUe57fhaLF4mUngax-_1sguG-0sOHZEP1XhAa4eWEaSC4K1V3PJlKVdBG1jLGbR0Q/exec', {
-          method: 'POST',
-          body: JSON.stringify(data),
-          headers: { 'Content-Type': 'application/json' }
-        });
+  method: 'POST',
+  body: JSON.stringify(data),
+  headers: { 'Content-Type': 'application/json' }
+});
         const result = await response.json();
         if (result.result === 'success') {
           alert('Request submitted successfully!');
