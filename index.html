@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Zuu &amp; Caster</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+    /* CSS Reset */
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+        Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      /* Black and red gradient background */
+      background: linear-gradient(135deg, #0a0a0a, #7f0a0a);
+      color: #f9fafb; /* off white for text */
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-feature-settings: "liga" 1, "calt" 1;
+      position: relative;
+    }
+
+    a {
+      color: #e63946;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    a:hover,
+    a:focus {
+      color: #b32a33;
+      outline: none;
+    }
+
+    /* Sticky Header */
+    header {
+      position: sticky;
+      top: 0;
+      background-color: rgba(30,30,30,0.85);
+      backdrop-filter: saturate(180%) blur(8px);
+      border-bottom: 1px solid rgba(230, 57, 70, 0.4);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 3rem;
+      box-shadow: 0 2px 6px rgba(230, 57, 70, 0.3);
+      z-index: 1000;
+      user-select: none;
+    }
+    .logo {
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: #e63946;
+      letter-spacing: -0.015em;
+      user-select: text;
+    }
+    nav a {
+      font-weight: 600;
+      font-size: 1rem;
+      margin-left: 2.25rem;
+      user-select: none;
+      color: #f9fafb;
+    }
+
+    /* Container max width */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Hero Section */
+    .hero {
+      padding: 6rem 0 5rem 0;
+      text-align: center;
+      user-select: none;
+    }
+    .hero h1 {
+      font-size: 3.5rem;
+      font-weight: 700;
+      color: #e63946;
+      margin: 0 0 1rem 0;
+      line-height: 1.1;
+      text-shadow: 0 0 6px rgba(230, 57, 70, 0.7);
+    }
+    .hero p {
+      font-size: 1.25rem;
+      color: #d1d5db;
+      max-width: 600px;
+      margin: 0 auto 3rem auto;
+      user-select: text;
+    }
+    .btn-primary {
+      background-color: #111111;
+      color: white;
+      font-weight: 700;
+      font-size: 1.125rem;
+      padding: 0.75rem 2.25rem;
+      border: none;
+      border-radius: 0.75rem;
+      cursor: pointer;
+      box-shadow: 0 8px 15px rgba(230, 57, 70, 0.6);
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      user-select: none;
+      text-decoration: none;
+      display: inline-block;
+      text-shadow: 0 0 4px rgba(0, 0, 0, 0.6);
+    }
+    .btn-primary:hover,
+    .btn-primary:focus {
+      background-color: #2c2c2c;
+      box-shadow: 0 12px 20px rgba(230, 57, 70, 0.85);
+      outline: none;
+    }
+
+    /* Services Section */
+    .services {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2.75rem;
+      padding-bottom: 6rem;
+    }
+
+    .card {
+      background: #1e1e1e;
+      border-radius: 0.75rem;
+      box-shadow: 0 8px 24px rgba(230,57,70,0.3);
+      padding: 2.5rem 2rem 3rem 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      user-select: none;
+      transition: box-shadow 0.3s ease, transform 0.3s ease;
+      color: #f9fafb;
+    }
+    .card:hover,
+    .card:focus-within {
+      box-shadow: 0 14px 40px rgba(230, 57, 70, 0.6);
+      transform: translateY(-6px);
+      outline: none;
+    }
+    .card h2 {
+      font-weight: 700;
+      font-size: 2.5rem;
+      color: #e63946;
+      margin: 0;
+      user-select: text;
+      text-shadow: 0 0 8px rgba(230, 57, 70, 0.8);
+    }
+    .services-list {
+      list-style: none;
+      padding-left: 0;
+      margin: 0;
+      color: #d1d5db;
+      font-weight: 600;
+      font-size: 1.125rem;
+      line-height: 1.5;
+      user-select: text;
+    }
+    .services-list li {
+      padding: 0.25rem 0;
+      border-bottom: 1px solid rgba(230,57,70,0.2);
+      transition: color 0.25s ease;
+      cursor: default;
+      user-select: text;
+    }
+    .services-list li:last-child {
+      border-bottom: none;
+    }
+    .services-list li:hover {
+      color: #b32a33;
+    }
+
+    /* Footer */
+    footer {
+      padding: 3rem 2rem;
+      text-align: center;
+      color: rgba(230, 57, 70, 0.8);
+      font-weight: 400;
+      font-size: 0.9rem;
+      user-select: none;
+      background-color: transparent;
+      border-top: 1px solid rgba(230, 57, 70, 0.4);
+      margin-top: auto;
+    }
+
+    /* Floating WhatsApp Contact Button */
+    .whatsapp-float {
+      position: fixed;
+      right: 2rem;
+      bottom: 2.5rem;
+      background-color: #25D366;
+      color: white;
+      font-weight: 700;
+      font-family: 'Inter', sans-serif;
+      font-size: 1.1rem;
+      border-radius: 9999px;
+      padding: 0.75rem 1.5rem 0.75rem 0.75rem;
+      box-shadow:
+        0 0 8px #25D366,
+        0 0 16px #25D366,
+        0 0 24px #25D366,
+        0 0 32px #25D366;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      cursor: pointer;
+      user-select: none;
+      text-decoration: none;
+      z-index: 10000;
+      animation: rgbBlink 3s infinite;
+      transition: box-shadow 0.3s ease, transform 0.3s ease;
+    }
+    .whatsapp-float:hover,
+    .whatsapp-float:focus-visible {
+      box-shadow:
+        0 0 12px #25D366,
+        0 0 28px #e63946,
+        0 0 36px #1db954,
+        0 0 48px #00aabb;
+      transform: scale(1.05);
+      outline: none;
+    }
+    .whatsapp-icon {
+      width: 22px;
+      height: 22px;
+      fill: white;
+      flex-shrink: 0;
+    }
+    /* RGB blinking animation */
+    @keyframes rgbBlink {
+      0%, 100% {
+        box-shadow:
+          0 0 6px #25D366,
+          0 0 14px #25D366,
+          0 0 22px #25D366;
+      }
+      33% {
+        box-shadow:
+          0 0 8px #e63946,
+          0 0 20px #e63946,
+          0 0 30px #e63946;
+      }
+      66% {
+        box-shadow:
+          0 0 10px #00aabb,
+          0 0 24px #00aabb,
+          0 0 38px #00aabb;
+      }
+    }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      header {
+        padding: 1rem 1.5rem;
+      }
+      nav a {
+        margin-left: 1.25rem;
+        font-size: 0.875rem;
+      }
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+      .hero p {
+        font-size: 1rem;
+        max-width: 90vw;
+      }
+      .btn-primary {
+        font-size: 1rem;
+        padding: 0.6rem 1.5rem;
+      }
+      .services {
+        gap: 1.5rem;
+        grid-template-columns: 1fr;
+      }
+      .card h2 {
+        font-size: 2rem;
+      }
+      .services-list {
+        font-size: 1rem;
+      }
+      .whatsapp-float {
+        font-size: 1rem;
+        padding: 0.6rem 1.2rem 0.6rem 0.6rem;
+      }
+      .whatsapp-icon {
+        width: 18px;
+        height: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">Unlock &amp; Repair</div>
+    <nav aria-label="Primary navigation">
+      <a href="#services">Services</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="hero" role="banner" aria-label="Hero section">
+      <h1>Secure Phone &amp; Computer Unlock Services With Zuu Caster</h1>
+      <p>Unlock passwords, screen locks, Apple ID, and more for Samsung, iPhone, Honor devices &amp; provide computer repair and custom builds.</p>
+      <a href="https://wa.me/60178040403" target="_blank" rel="noopener" class="btn-primary" aria-label="Contact us on WhatsApp +60178040403">
+        Contact Us
+      </a>
+    </section>
+
+    <section id="services" class="services" aria-label="Our services">
+      <article class="card" tabindex="0" aria-labelledby="phone-unlock-title">
+        <h2 id="phone-unlock-title">Phone Unlock Services</h2>
+        <ul class="services-list">
+          <li>Samsung Google lock</li>
+          <li>Google Lock</li>
+          <li>Telco Unlock</li>
+          <li>Phone Brick</li>
+          <li>iPhone ID Lock</li>
+          <li>iPhone Telco Lock</li>
+          <li>Honor Google Lock / FRP</li>
+        </ul>
+      </article>
+
+      <article class="card" tabindex="0" aria-labelledby="additional-services-title">
+        <h2 id="additional-services-title">Additional Phone Services</h2>
+        <ul class="services-list">
+          <li>Website Design</li>
+          <li>FRP Bypass &amp; Password Reset</li>
+          <li>Forget Apple ID</li>
+          <li>iPad Bypass</li>
+          <li>Upgrade Storage</li>
+          <li>Screen Replacement</li>
+          <li>Glass Replacement</li>
+        </ul>
+      </article>
+
+      <article class="card" tabindex="0" aria-labelledby="computer-services-title">
+        <h2 id="computer-services-title">Computer Services</h2>
+        <ul class="services-list">
+          <li>Built Custom Computer</li>
+          <li>Laptop Service</li>
+        </ul>
+      </article>
+    </section>
+  </main>
+
+  <!-- Floating WhatsApp Contact Button -->
+  <a href="https://wa.me/60178040403" target="_blank" rel="noopener" class="whatsapp-float" aria-label="Contact via WhatsApp +60178040403">
+    <svg class="whatsapp-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" fill="white">
+      <path d="M20.52 3.48A11.89 11.89 0 0012 0C5.373 0 0 5.373 0 12a11.97 11.97 0 001.671 6.027L0 24l6.076-1.647A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12a11.86 11.86 0 00-3.48-8.52zm-8.043 16.257a9.923 9.923 0 01-5.054-1.453l-.363-.215-3.607.979.963-3.522-.236-.377a9.97 9.97 0 0115.596-12.6 9.856 9.856 0 01-7.299 16.237zm5.178-6.407c-.286-.143-1.686-.833-1.946-.928-.26-.094-.448-.143-.637.143-.187.286-.726.928-.89 1.118-.163.187-.326.21-.612.07a8.064 8.064 0 01-2.378-1.468 9.06 9.06 0 01-1.677-2.085c-.175-.304-.018-.468.13-.61.134-.134.3-.35.452-.525a1.962 1.962 0 00.3-.5c.1-.163.05-.305-.025-.448-.075-.143-.637-1.54-.873-2.108-.23-.556-.463-.48-.637-.489l-.544-.01a.93.93 0 00-.675.31c-.23.236-.874.855-.874 2.082 0 1.227.896 2.415 1.02 2.582.125.163 1.764 2.727 4.276 3.82a14.54 14.54 0 001.92.81c.807.33 1.436.281 1.976.17.602-.134 1.85-.755 2.111-1.485.263-.73.263-1.355.188-1.485-.075-.13-.285-.195-.6-.338z"/>
+    </svg>
+    WhatsApp +60178040403
+  </a>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RGB Advertising</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: black;
+            margin: 0;
+        }
+
+        .banner {
+            font-size: 48px;
+            font-weight: bold;
+            text-align: center;
+            animation: blink 1s infinite;
+            background: linear-gradient(90deg, red, green, blue);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        @keyframes blink {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="banner">SAMSUNG FRP / GOOGLE RM60</div>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RGB Advertising</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: black;
+            margin: 0;
+        }
+
+        .banner {
+            font-size: 48px;
+            font-weight: bold;
+            text-align: center;
+            animation: blink 1s infinite;
+            background: linear-gradient(90deg, red, green, blue);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        @keyframes blink {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="banner">XIAOMI FRP / GOOGLE RM60</div>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RGB Advertising</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: black;
+            margin: 0;
+        }
+
+        .banner {
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            animation: blink 1s infinite;
+            background: linear-gradient(90deg, red, green, blue);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        @keyframes blink {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="banner">IPAD 2017 below iCloud remove RM50</div>
+</body>
+</html>
+
+
+ <footer id="contact">
+    &copy; 2025 Unlock &amp; Repair Services with Zuu Caster All rights reserved.
+  </footer>
+
