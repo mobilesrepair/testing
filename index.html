@@ -4,366 +4,366 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Samsung FRP Tool Simulator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        * {
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f5f5f5;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            font-family: 'Roboto', Arial, sans-serif;
-            user-select: none;
-        }
-
-        body {
-            background-color: #f5f5f5;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
+        }
+        
+        .phone-frame {
+            width: 360px;
+            height: 740px;
+            background-color: #000;
+            border-radius: 40px;
+            padding: 20px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            position: relative;
             overflow: hidden;
         }
-
-        .phone-frame {
-            width: 340px;
-            height: 680px;
-            background-color: #000;
-            border-radius: 30px;
-            padding: 12px;
-            position: relative;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
-        }
-
-        .screen {
+        
+        .phone-screen {
             width: 100%;
             height: 100%;
-            background-color: #000;
-            border-radius: 30px;
+            background-color: #fff;
+            border-radius: 25px;
             overflow: hidden;
             position: relative;
         }
-
+        
         .status-bar {
-            width: 100%;
             height: 30px;
-            background-color: #00000070;
+            background-color: #000;
+            color: #fff;
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            padding: 0 20px;
-            color: white;
+            padding: 5px 15px;
             font-size: 12px;
-            position: relative;
-            z-index: 10;
+            align-items: center;
         }
-
+        
+        .samseng-logo {
+            font-weight: 700;
+            font-size: 14px;
+        }
+        
         .frp-container {
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(to bottom, #000000, #1a1a1a);
+            padding: 20px;
+        }
+        
+        .frp-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin: 20px 0;
+            text-align: center;
+            color: #333;
+        }
+        
+        .frp-subtitle {
+            font-size: 16px;
+            color: #666;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .google-account {
+            background-color: #f9f9f9;
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid #e0e0e0;
             display: flex;
-            flex-direction: column;
+            align-items: center;
+        }
+        
+        .google-icon {
+            width: 40px;
+            height: 40px;
+            background-color: #fff;
+            border-radius: 50%;
+            margin-right: 15px;
+            display: flex;
             justify-content: center;
             align-items: center;
-            color: white;
-            text-align: center;
-        }
-
-        .samsung-logo {
-            margin-bottom: 30px;
-        }
-
-        .samsung-text {
-            font-size: 24px;
-            font-weight: 300;
-            margin-top: 10px;
-            color: white;
-        }
-
-        .frp-heading {
+            color: #4285F4;
+            font-weight: bold;
             font-size: 18px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .account-info {
+            flex: 1;
+        }
+        
+        .account-name {
             font-weight: 500;
-            margin: 20px 0;
-            color: white;
+            font-size: 16px;
+            margin-bottom: 3px;
         }
-
-        .frp-message {
-            font-size: 14px;
-            color: #ccc;
-            max-width: 80%;
-            margin-bottom: 30px;
-            line-height: 1.5;
+        
+        .account-email {
+            font-size: 13px;
+            color: #666;
         }
-
-        .google-account-input {
-            width: 80%;
-            padding: 15px;
-            background-color: #2a2a2a;
-            border: 1px solid #444;
-            border-radius: 8px;
-            color: white;
-            font-size: 14px;
+        
+        .frp-form {
+            margin-top: 20px;
+        }
+        
+        .input-group {
             margin-bottom: 15px;
         }
-
-        .password-input {
-            width: 80%;
-            padding: 15px;
-            background-color: #2a2a2a;
-            border: 1px solid #444;
-            border-radius: 8px;
-            color: white;
+        
+        .input-label {
+            display: block;
+            margin-bottom: 5px;
             font-size: 14px;
-            margin-bottom: 20px;
+            color: #555;
+            font-weight: 500;
         }
-
-        .next-button {
-            width: 80%;
-            padding: 15px;
-            background-color: #1a73e8;
-            color: white;
-            border: none;
+        
+        .input-field {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            font-size: 16px;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 14px;
             border-radius: 8px;
             font-size: 16px;
             font-weight: 500;
+            border: none;
             cursor: pointer;
-            transition: background-color 0.3s;
+            margin-top: 10px;
         }
-
-        .next-button:disabled {
-            background-color: #555;
-            cursor: not-allowed;
+        
+        .btn-primary {
+            background-color: #3478F6;
+            color: white;
         }
-
-        .forgot-password {
-            color: #1a73e8;
-            font-size: 14px;
-            margin-top: 15px;
-            cursor: pointer;
+        
+        .btn-secondary {
+            background-color: #f0f0f0;
+            color: #333;
         }
-
-        .error-message {
-            color: #f44336;
-            font-size: 13px;
-            margin-top: 5px;
-            max-width: 80%;
+        
+        .unlock-status {
+            text-align: center;
+            margin-top: 30px;
             display: none;
         }
-
-        .footer-text {
+        
+        .status-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+        
+        .status-success {
+            color: #4CAF50;
+            display: none;
+        }
+        
+        .status-error {
+            color: #F44336;
+            display: none;
+        }
+        
+        .status-text {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+            display: none;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .navigation-buttons {
             position: absolute;
             bottom: 20px;
-            color: #666;
-            font-size: 11px;
-            width: 100%;
-            text-align: center;
+            width: calc(100% - 40px);
+            display: flex;
+            justify-content: space-between;
         }
-
-        .loading-bar {
-            width: 80%;
-            height: 3px;
-            background-color: #333;
-            margin-top: 20px;
-            border-radius: 3px;
-            overflow: hidden;
-            display: none;
+        
+        .home-button {
+            width: 60px;
+            height: 60px;
+            background-color: #f5f5f5;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            color: #333;
+            cursor: pointer;
         }
-
-        .loading-progress {
-            height: 100%;
-            width: 0;
-            background-color: #1a73e8;
-            transition: width 0.3s;
-        }
-
-        .keyboard {
+        
+        .samseng-watermark {
             position: absolute;
-            bottom: 0;
-            width: 100%;
-            background-color: #2a2a2a;
-            display: none;
-            padding: 5px;
-            flex-wrap: wrap;
-            justify-content: center;
-            border-top-left-radius: 10px;
-            border-top-right-radius: 10px;
-        }
-
-        .key {
-            width: 30%;
-            height: 45px;
-            background-color: #333;
-            margin: 2px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-radius: 4px;
-            font-size: 16px;
-            color: white;
-            cursor: pointer;
-        }
-
-        .key-space {
-            width: 96%;
-            height: 45px;
-            background-color: #333;
-            margin: 2px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-radius: 4px;
-            font-size: 16px;
-            color: white;
-            cursor: pointer;
-        }
-
-        .key:hover, .key-space:hover {
-            background-color: #444;
+            bottom: 10px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 12px;
+            color: #aaa;
         }
     </style>
 </head>
 <body>
     <div class="phone-frame">
-        <div class="screen">
+        <div class="phone-screen">
             <div class="status-bar">
-                <div class="time">12:05</div>
-                <div class="icons">📶 🔋 100%</div>
+                <div>9:41</div>
+                <div class="samseng-logo">SAMSENG</div>
+                <div>
+                    <span class="battery">100%</span>
+                </div>
             </div>
             
             <div class="frp-container">
-                <div class="samsung-logo">
-                    <svg width="50" height="50" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 0C5.37258 0 0 5.37258 0 12C0 18.6274 5.37258 24 12 24C18.6274 24 24 18.6274 24 12C24 5.37258 18.6274 0 12 0Z" fill="white"/>
-                        <path d="M6.5 9.5H17.5V14.5H6.5V9.5Z" fill="#1428A0"/>
-                    </svg>
-                    <div class="samsung-text">Samsung</div>
+                <div class="frp-title">Google Account Verification</div>
+                <div class="frp-subtitle">Verify it's you to continue</div>
+                
+                <div class="google-account">
+                    <div class="google-icon">G</div>
+                    <div class="account-info">
+                        <div class="account-name">Zuu Caster</div>
+                        <div class="account-email">malaysiagsm1@gmail.com</div>
+                    </div>
                 </div>
                 
-                <div class="frp-heading">Enter device details</div>
-                <div class="frp-message">This device was reset. To continue, sign in with a Google Account that was previously synced on this device. <br> Developer by Zuu Caster IT Solution</div>
-                
-                <input type="text" class="google-account-input" placeholder="Enter IMEI" id="emailInput" onfocus="showKeyboard()">
-                <div class="error-message" id="emailError">Invalid IMEI number</div>
-                
-                <input type="password" class="password-input" placeholder="Model" id="passwordInput" onfocus="showKeyboard()">
-                <div class="error-message" id="passwordError">Invalid model number</div>
-                
-                <button class="next-button" id="nextButton" disabled onclick="attemptLogin()">Next</button>
-                <div class="forgot-password" onclick="forgotPassword()">Find model number?</div>
-                
-                <div class="loading-bar" id="loadingBar">
-                    <div class="loading-progress" id="loadingProgress"></div>
+                <div class="frp-form">
+                    <div class="input-group">
+                        <label class="input-label">Password</label>
+                        <input type="password" class="input-field" id="password" placeholder="Enter your password">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label class="input-label">Security Code (optional)</label>
+                        <input type="text" class="input-field" id="security-code" placeholder="Enter security code if available">
+                    </div>
+                    
+                    <button class="btn btn-primary" id="verify-btn">Verify Account</button>
+                    <button class="btn btn-secondary" id="forgot-password">Contact Support (WhatsApp)</button>
                 </div>
                 
-                <div class="footer-text">Device ID: SM-S999N • Android 15</div>
+                <div class="unlock-status" id="unlock-status">
+                    <div class="status-icon status-success" id="success-icon">✓</div>
+                    <div class="status-icon status-error" id="error-icon">✗</div>
+                    <div class="loader" id="loader"></div>
+                    <div class="status-text" id="status-text"></div>
+                </div>
             </div>
             
-            <div class="keyboard" id="keyboard">
-                <div class="key" onclick="addChar('1')">1</div>
-                <div class="key" onclick="addChar('2')">2</div>
-                <div class="key" onclick="addChar('3')">3</div>
-                <div class="key" onclick="addChar('4')">4</div>
-                <div class="key" onclick="addChar('5')">5</div>
-                <div class="key" onclick="addChar('6')">6</div>
-                <div class="key" onclick="addChar('7')">7</div>
-                <div class="key" onclick="addChar('8')">8</div>
-                <div class="key" onclick="addChar('9')">9</div>
-                <div class="key" onclick="addChar('@')">@</div>
-                <div class="key" onclick="addChar('0')">0</div>
-                <div class="key" onclick="backspace()">⌫</div>
-                <div class="key-space" onclick="hideKeyboard()">⌨️ Hide keyboard</div>
+            <div class="samseng-watermark">SAMSENG</div>
+            
+            <div class="navigation-buttons">
+                <div class="home-button">⌂</div>
             </div>
         </div>
     </div>
 
     <script>
-        let currentInput = null;
-        
-        function showKeyboard() {
-            document.getElementById('keyboard').style.display = 'flex';
-        }
-        
-        function hideKeyboard() {
-            document.getElementById('keyboard').style.display = 'none';
-        }
-        
-        function addChar(char) {
-            if (currentInput) {
-                currentInput.value += char;
-                validateInputs();
-            }
-        }
-        
-        function backspace() {
-            if (currentInput && currentInput.value.length > 0) {
-                currentInput.value = currentInput.value.substring(0, currentInput.value.length - 1);
-                validateInputs();
-            }
-        }
-        
-        document.getElementById('emailInput').addEventListener('focus', function() {
-            currentInput = this;
-        });
-        
-        document.getElementById('passwordInput').addEventListener('focus', function() {
-            currentInput = this;
-        });
-        
-        function validateInputs() {
-            const email = document.getElementById('emailInput').value;
-            const password = document.getElementById('passwordInput').value;
-            const nextButton = document.getElementById('nextButton');
+        document.addEventListener('DOMContentLoaded', function() {
+            const verifyBtn = document.getElementById('verify-btn');
+            const forgotPasswordBtn = document.getElementById('forgot-password');
+            const unlockStatus = document.getElementById('unlock-status');
+            const successIcon = document.getElementById('success-icon');
+            const errorIcon = document.getElementById('error-icon');
+            const loader = document.getElementById('loader');
+            const statusText = document.getElementById('status-text');
+            const passwordField = document.getElementById('password');
             
-            if (email.length > 0 && password.length > 0) {
-                nextButton.disabled = false;
-            } else {
-                nextButton.disabled = true;
-            }
-            
-            // Hide any visible error messages
-            document.getElementById('emailError').style.display = 'none';
-            document.getElementById('passwordError').style.display = 'none';
-        }
-        
-        function attemptLogin() {
-            const email = document.getElementById('emailInput').value;
-            const password = document.getElementById('passwordInput').value;
-            
-            // Simulate FRP verification
-            document.getElementById('loadingBar').style.display = 'block';
-            
-            let progress = 0;
-            const interval = setInterval(() => {
-                progress += 5;
-                document.getElementById('loadingProgress').style.width = `${progress}%`;
+            verifyBtn.addEventListener('click', function() {
+                // Show loading state
+                unlockStatus.style.display = 'block';
+                loader.style.display = 'block';
+                successIcon.style.display = 'none';
+                errorIcon.style.display = 'none';
+                statusText.textContent = '';
                 
-                if (progress >= 100) {
-                    clearInterval(interval);
-                    simulateVerificationResult();
-                }
-            }, 100);
-        }
-        
-        function simulateVerificationResult() {
-            // Randomly decide if verification will fail (for simulation purposes)
-            const isError = Math.random() > 0.5;
+                // Hide the form
+                document.querySelector('.frp-form').style.display = 'none';
+                document.querySelector('.google-account').style.display = 'none';
+                document.querySelector('.frp-subtitle').style.display = 'none';
+                
+                // Simulate processing delay
+                setTimeout(function() {
+                    loader.style.display = 'none';
+                    
+                    if(passwordField.value === 'samsungfrp') {
+                        // Successful unlock
+                        successIcon.style.display = 'block';
+                        statusText.textContent = 'Account verified successfully! FRP lock removed.';
+                        
+                        // Change phone UI to unlocked state after delay
+                        setTimeout(function() {
+                            document.querySelector('.frp-title').textContent = 'Welcome';
+                            document.querySelector('.frp-subtitle').style.display = 'block';
+                            document.querySelector('.frp-subtitle').textContent = 'Your device is ready to use';
+                            
+                            // Create a simple home screen
+                            const homeScreenHtml = `
+                                <div style="padding: 20px;">
+                                    <div style="text-align: center; margin-top: 50px;">
+                                        <img src="https://placehold.co/100x100" alt="Samsung Galaxy smartphone home screen with app icons" style="border-radius: 20px; margin-bottom: 20px;" />
+                                        <h2 style="font-size: 24px; margin-bottom: 10px;">Welcome to your Galaxy</h2>
+                                        <p style="color: #666;">Device is now fully unlocked</p>
+                                    </div>
+                                </div>
+                            `;
+                            
+                            unlockStatus.innerHTML = homeScreenHtml;
+                        }, 2000);
+                    } else {
+                        // Failed unlock
+                        errorIcon.style.display = 'block';
+                        statusText.textContent = 'Account verification failed. Please try again.';
+                        
+                        // Show the form again after delay
+                        setTimeout(function() {
+                            unlockStatus.style.display = 'none';
+                            document.querySelector('.frp-form').style.display = 'block';
+                            document.querySelector('.google-account').style.display = 'flex';
+                            document.querySelector('.frp-subtitle').style.display = 'block';
+                        }, 2000);
+                    }
+                }, 3000);
+            });
             
-            if (isError) {
-                // Randomly show either email or password error
-                if (Math.random() > 0.5) {
-                    document.getElementById('emailError').style.display = 'block';
-                } else {
-                    document.getElementById('passwordError').style.display = 'block';
-                }
-                document.getElementById('loadingBar').style.display = 'none';
-            } else {
-                // Simulate successful verification
-                document.getElementById('frp-container').innerHTML = '<h2>Verification complete</h2><p>Setting up your device...</p>';
-                // In a real tool, this would actually bypass FRP
-            }
-        }
-        
-        function forgotPassword() {
-            alert("You'll be redirected to Google's password recovery page in a real scenario.");
-        }
+            forgotPasswordBtn.addEventListener('click', function() {
+                window.location.href = "https://wa.me/60178040403?text=Help%20with%20Samsung%20FRP%20unlock";
+            });
+            
+            // Home button functionality
+            document.querySelector('.home-button').addEventListener('click', function() {
+                location.reload();
+            });
+        });
     </script>
 </body>
 </html>
