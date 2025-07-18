@@ -3,245 +3,367 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zuu Caster | Bootloader Unlock Simulator</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Samsung FRP Tool Simulator</title>
     <style>
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', Arial, sans-serif;
+            user-select: none;
         }
-        @keyframes progress {
-            0% { width: 0%; }
-            100% { width: 100%; }
+
+        body {
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
         }
-        .pulse-animation {
-            animation: pulse 1.5s infinite;
+
+        .phone-frame {
+            width: 340px;
+            height: 680px;
+            background-color: #000;
+            border-radius: 30px;
+            padding: 12px;
+            position: relative;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
         }
-        .progress-bar {
-            animation: progress 3s linear forwards;
+
+        .screen {
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            border-radius: 30px;
+            overflow: hidden;
+            position: relative;
         }
-        .console-output {
-            font-family: 'Courier New', monospace;
-            height: 200px;
-            overflow-y: auto;
-            background-color: #1a1a1a;
-            color: #00ff00;
-            padding: 1rem;
-            border-radius: 0.375rem;
+
+        .status-bar {
+            width: 100%;
+            height: 30px;
+            background-color: #00000070;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            color: white;
+            font-size: 12px;
+            position: relative;
+            z-index: 10;
         }
-        .phone-screen {
-            background-color: #0a0a0a;
-            border-radius: 2rem;
-            padding: 1.5rem;
-            border: 8px solid #333;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+
+        .frp-container {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, #000000, #1a1a1a);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
         }
-        .warning-sign {
-            background: repeating-linear-gradient(
-                45deg,
-                #ff0000,
-                #ff0000 10px,
-                #ff3333 10px,
-                #ff3333 20px
-            );
+
+        .samsung-logo {
+            margin-bottom: 30px;
+        }
+
+        .samsung-text {
+            font-size: 24px;
+            font-weight: 300;
+            margin-top: 10px;
+            color: white;
+        }
+
+        .frp-heading {
+            font-size: 18px;
+            font-weight: 500;
+            margin: 20px 0;
+            color: white;
+        }
+
+        .frp-message {
+            font-size: 14px;
+            color: #ccc;
+            max-width: 80%;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .google-account-input {
+            width: 80%;
+            padding: 15px;
+            background-color: #2a2a2a;
+            border: 1px solid #444;
+            border-radius: 8px;
+            color: white;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .password-input {
+            width: 80%;
+            padding: 15px;
+            background-color: #2a2a2a;
+            border: 1px solid #444;
+            border-radius: 8px;
+            color: white;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .next-button {
+            width: 80%;
+            padding: 15px;
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .next-button:disabled {
+            background-color: #555;
+            cursor: not-allowed;
+        }
+
+        .forgot-password {
+            color: #1a73e8;
+            font-size: 14px;
+            margin-top: 15px;
+            cursor: pointer;
+        }
+
+        .error-message {
+            color: #f44336;
+            font-size: 13px;
+            margin-top: 5px;
+            max-width: 80%;
+            display: none;
+        }
+
+        .footer-text {
+            position: absolute;
+            bottom: 20px;
+            color: #666;
+            font-size: 11px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .loading-bar {
+            width: 80%;
+            height: 3px;
+            background-color: #333;
+            margin-top: 20px;
+            border-radius: 3px;
+            overflow: hidden;
+            display: none;
+        }
+
+        .loading-progress {
+            height: 100%;
+            width: 0;
+            background-color: #1a73e8;
+            transition: width 0.3s;
+        }
+
+        .keyboard {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background-color: #2a2a2a;
+            display: none;
+            padding: 5px;
+            flex-wrap: wrap;
+            justify-content: center;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+
+        .key {
+            width: 30%;
+            height: 45px;
+            background-color: #333;
+            margin: 2px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 4px;
+            font-size: 16px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .key-space {
+            width: 96%;
+            height: 45px;
+            background-color: #333;
+            margin: 2px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 4px;
+            font-size: 16px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .key:hover, .key-space:hover {
+            background-color: #444;
         }
     </style>
 </head>
-<body class="bg-gray-100 min-h-screen flex flex-col items-center justify-center p-4">
-    <div class="max-w-md w-full space-y-6">
-        <div class="phone-screen">
-            <div class="text-center mb-6">
-                <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/2603c8d5-fa2c-47d3-8a95-234d7b3e91b3.png" alt="Zuu Caster IT Solutions logo" class="mx-auto mb-2" />
-                <h1 class="text-2xl font-bold text-white">Bootloader Unlock Tool</h1>
-                <p class="text-gray-400 text-sm">by Zuu Caster IT Solutions</p>
+<body>
+    <div class="phone-frame">
+        <div class="screen">
+            <div class="status-bar">
+                <div class="time">12:05</div>
+                <div class="icons">📶 🔋 100%</div>
             </div>
-
-            <div class="bg-gray-800 rounded-lg p-4 mb-6">
-                <div class="flex items-center space-x-3 mb-4">
-                    <svg class="w-6 h-6 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+            
+            <div class="frp-container">
+                <div class="samsung-logo">
+                    <svg width="50" height="50" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 0C5.37258 0 0 5.37258 0 12C0 18.6274 5.37258 24 12 24C18.6274 24 24 18.6274 24 12C24 5.37258 18.6274 0 12 0Z" fill="white"/>
+                        <path d="M6.5 9.5H17.5V14.5H6.5V9.5Z" fill="#1428A0"/>
                     </svg>
-                    <p class="text-yellow-500 font-medium">Warning: This will void your warranty</p>
+                    <div class="samsung-text">Samsung</div>
                 </div>
-                <div class="warning-sign text-white p-3 rounded mb-4">
-                    <p class="font-bold">Unlocking the bootloader will:</p>
-                    <ul class="list-disc list-inside text-sm mt-2">
-                        <li>Delete all user data</li>
-                        <li>Void your warranty</li>
-                        <li>Make your device less secure</li>
-                    </ul>
+                
+                <div class="frp-heading">Enter device details</div>
+                <div class="frp-message">This device was reset. To continue, sign in with a Google Account that was previously synced on this device. <br> Developer by Zuu Caster IT Solution</div>
+                
+                <input type="text" class="google-account-input" placeholder="Enter IMEI" id="emailInput" onfocus="showKeyboard()">
+                <div class="error-message" id="emailError">Invalid IMEI number</div>
+                
+                <input type="password" class="password-input" placeholder="Model" id="passwordInput" onfocus="showKeyboard()">
+                <div class="error-message" id="passwordError">Invalid model number</div>
+                
+                <button class="next-button" id="nextButton" disabled onclick="attemptLogin()">Next</button>
+                <div class="forgot-password" onclick="forgotPassword()">Find model number?</div>
+                
+                <div class="loading-bar" id="loadingBar">
+                    <div class="loading-progress" id="loadingProgress"></div>
                 </div>
+                
+                <div class="footer-text">Device ID: SM-S999N • Android 15</div>
             </div>
-
-            <div class="mb-6" id="deviceInfoSection">
-                <div class="bg-gray-800 p-4 rounded-lg">
-                    <h3 class="text-white font-medium mb-2">Device Information</h3>
-                    <div class="grid grid-cols-2 gap-2 text-sm text-gray-300">
-                        <div>Model:</div>
-                        <div class="font-mono">X657B</div>
-                        <div>Android:</div>
-                        <div class="font-mono">13</div>
-                        <div>Build:</div>
-                        <div class="font-mono">X657B-H824ABC-LO-230727</div>
-                    </div>
-                </div>
+            
+            <div class="keyboard" id="keyboard">
+                <div class="key" onclick="addChar('1')">1</div>
+                <div class="key" onclick="addChar('2')">2</div>
+                <div class="key" onclick="addChar('3')">3</div>
+                <div class="key" onclick="addChar('4')">4</div>
+                <div class="key" onclick="addChar('5')">5</div>
+                <div class="key" onclick="addChar('6')">6</div>
+                <div class="key" onclick="addChar('7')">7</div>
+                <div class="key" onclick="addChar('8')">8</div>
+                <div class="key" onclick="addChar('9')">9</div>
+                <div class="key" onclick="addChar('@')">@</div>
+                <div class="key" onclick="addChar('0')">0</div>
+                <div class="key" onclick="backspace()">⌫</div>
+                <div class="key-space" onclick="hideKeyboard()">⌨️ Hide keyboard</div>
             </div>
-
-            <div class="bg-gray-800 p-4 rounded-lg mb-6 hidden" id="stepsSection">
-                <ol class="text-white space-y-4">
-                    <li class="flex items-start space-x-2">
-                        <span class="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0">1</span>
-                        <div>
-                            <span class="font-medium">Enable OEM Unlock</span>
-                            <p class="text-sm text-gray-400">Go to Developer options and enable OEM unlocking</p>
-                        </div>
-                    </li>
-                    <li class="flex items-start space-x-2" id="fastbootStep">
-                        <span class="bg-gray-600 text-white rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0">2</span>
-                        <div>
-                            <span class="font-medium">Boot into Fastboot mode</span>
-                            <p class="text-sm text-gray-400">Power off, then hold Volume Down + Power</p>
-                        </div>
-                    </li>
-                    <li class="flex items-start space-x-2">
-                        <span class="bg-gray-600 text-white rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0">3</span>
-                        <div>
-                            <span class="font-medium">Connect USB cable</span>
-                            <p class="text-sm text-gray-400">Connect your device to PC via USB</p>
-                        </div>
-                    </li>
-                    <li class="flex items-start space-x-2">
-                        <span class="bg-gray-600 text-white rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0">4</span>
-                        <div>
-                            <span class="font-medium">Execute unlock command</span>
-                            <p class="text-sm text-gray-400">Run: <span class="font-mono bg-black p-1 rounded">fastboot oem unlock</span></p>
-                        </div>
-                    </li>
-                </ol>
-            </div>
-
-            <div class="hidden" id="processSection">
-                <div class="console-output mb-4" id="console"></div>
-                <div class="bg-gray-800 rounded-lg overflow-hidden mb-4">
-                    <div class="progress-bar h-2 bg-blue-500"></div>
-                </div>
-                <p class="text-center text-gray-300 text-sm" id="statusText">Initializing process...</p>
-            </div>
-
-            <div class="hidden text-center" id="successSection">
-                <svg class="w-16 h-16 text-green-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-                <h3 class="text-white text-xl font-bold mb-2">Unlock Successful!</h3>
-                <p class="text-gray-300 mb-6">Your device will now reboot and perform a factory reset.</p>
-                <button class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full">
-                    Close
-                </button>
-            </div>
-
-            <div class="flex space-x-4" id="buttonSection">
-                <button id="startBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full flex-grow">
-                    Start Process
-                </button>
-                <button id="instructionsBtn" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-full">
-                    Instructions
-                </button>
-            </div>
-        </div>
-
-        <div class="text-center text-gray-500 text-sm">
-            <p>© 2023 Zuu Caster IT Solutions. This is a simulation only.</p>
         </div>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const startBtn = document.getElementById('startBtn');
-            const instructionsBtn = document.getElementById('instructionsBtn');
-            const deviceInfoSection = document.getElementById('deviceInfoSection');
-            const stepsSection = document.getElementById('stepsSection');
-            const processSection = document.getElementById('processSection');
-            const successSection = document.getElementById('successSection');
-            const consoleOutput = document.getElementById('console');
-            const statusText = document.getElementById('statusText');
-            const fastbootStep = document.getElementById('fastbootStep');
-
-            instructionsBtn.addEventListener('click', function() {
-                startBtn.classList.add('hidden');
-                instructionsBtn.classList.add('hidden');
-                deviceInfoSection.classList.add('hidden');
-                stepsSection.classList.remove('hidden');
-                
-                setTimeout(() => {
-                    const backBtn = document.createElement('button');
-                    backBtn.textContent = 'Back';
-                    backBtn.className = 'bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded-full w-full';
-                    backBtn.onclick = function() {
-                        stepsSection.classList.add('hidden');
-                        deviceInfoSection.classList.remove('hidden');
-                        startBtn.classList.remove('hidden');
-                        instructionsBtn.classList.remove('hidden');
-                        backBtn.remove();
-                    };
-                    stepsSection.parentNode.insertBefore(backBtn, stepsSection.nextSibling);
-                }, 100);
-            });
-
-            startBtn.addEventListener('click', function() {
-                startBtn.classList.add('hidden');
-                instructionsBtn.classList.add('hidden');
-                deviceInfoSection.classList.add('hidden');
-                processSection.classList.remove('hidden');
-
-                simulateUnlockProcess();
-            });
-
-            function simulateUnlockProcess() {
-                const messages = [
-                    "Connecting to device...",
-                    "Device detected: X657B",
-                    "Checking bootloader status...",
-                    "Bootloader is locked",
-                    "Requesting unlock token...",
-                    "Please confirm unlock on device screen",
-                    "Token verified",
-                    "Unlocking bootloader...",
-                    "This will take about 30 seconds...",
-                    "Erasing userdata...",
-                    "Flashing new boot image...",
-                    "Finalizing changes..."
-                ];
-
-                let i = 0;
-                const interval = setInterval(() => {
-                    if (i < messages.length) {
-                        const line = document.createElement('div');
-                        line.textContent = '> ' + messages[i];
-                        consoleOutput.appendChild(line);
-                        statusText.textContent = messages[i];
-                        consoleOutput.scrollTop = consoleOutput.scrollHeight;
-                        i++;
-                        
-                        // Simulate confirming on device
-                        if (messages[i-1].includes("confirm unlock")) {
-                            setTimeout(() => {
-                                const confirmLine = document.createElement('div');
-                                confirmLine.textContent = '> Unlock confirmed on device';
-                                confirmLine.className = 'text-blue-300';
-                                consoleOutput.appendChild(confirmLine);
-                                consoleOutput.scrollTop = consoleOutput.scrollHeight;
-                            }, 1500);
-                        }
-                    } else {
-                        clearInterval(interval);
-                        setTimeout(() => {
-                            processSection.classList.add('hidden');
-                            successSection.classList.remove('hidden');
-                        }, 1000);
-                    }
-                }, 2000);
+        let currentInput = null;
+        
+        function showKeyboard() {
+            document.getElementById('keyboard').style.display = 'flex';
+        }
+        
+        function hideKeyboard() {
+            document.getElementById('keyboard').style.display = 'none';
+        }
+        
+        function addChar(char) {
+            if (currentInput) {
+                currentInput.value += char;
+                validateInputs();
             }
+        }
+        
+        function backspace() {
+            if (currentInput && currentInput.value.length > 0) {
+                currentInput.value = currentInput.value.substring(0, currentInput.value.length - 1);
+                validateInputs();
+            }
+        }
+        
+        document.getElementById('emailInput').addEventListener('focus', function() {
+            currentInput = this;
         });
+        
+        document.getElementById('passwordInput').addEventListener('focus', function() {
+            currentInput = this;
+        });
+        
+        function validateInputs() {
+            const email = document.getElementById('emailInput').value;
+            const password = document.getElementById('passwordInput').value;
+            const nextButton = document.getElementById('nextButton');
+            
+            if (email.length > 0 && password.length > 0) {
+                nextButton.disabled = false;
+            } else {
+                nextButton.disabled = true;
+            }
+            
+            // Hide any visible error messages
+            document.getElementById('emailError').style.display = 'none';
+            document.getElementById('passwordError').style.display = 'none';
+        }
+        
+        function attemptLogin() {
+            const email = document.getElementById('emailInput').value;
+            const password = document.getElementById('passwordInput').value;
+            
+            // Simulate FRP verification
+            document.getElementById('loadingBar').style.display = 'block';
+            
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += 5;
+                document.getElementById('loadingProgress').style.width = `${progress}%`;
+                
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    simulateVerificationResult();
+                }
+            }, 100);
+        }
+        
+        function simulateVerificationResult() {
+            // Randomly decide if verification will fail (for simulation purposes)
+            const isError = Math.random() > 0.5;
+            
+            if (isError) {
+                // Randomly show either email or password error
+                if (Math.random() > 0.5) {
+                    document.getElementById('emailError').style.display = 'block';
+                } else {
+                    document.getElementById('passwordError').style.display = 'block';
+                }
+                document.getElementById('loadingBar').style.display = 'none';
+            } else {
+                // Simulate successful verification
+                document.getElementById('frp-container').innerHTML = '<h2>Verification complete</h2><p>Setting up your device...</p>';
+                // In a real tool, this would actually bypass FRP
+            }
+        }
+        
+        function forgotPassword() {
+            alert("You'll be redirected to Google's password recovery page in a real scenario.");
+        }
     </script>
 </body>
 </html>
