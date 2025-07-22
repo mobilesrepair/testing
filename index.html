@@ -3,366 +3,246 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Samsung FRP Tool Simulator</title>
+    <title>Secure Access Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
-        
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #f5f5f5;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+        .login-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
         }
         
-        .phone-frame {
-            width: 360px;
-            height: 740px;
-            background-color: #000;
-            border-radius: 40px;
-            padding: 20px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
-            position: relative;
-            overflow: hidden;
+        .login-container:hover {
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.2);
+            transform: translateY(-5px);
         }
         
-        .phone-screen {
+        .code-input {
+            letter-spacing: 5px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            transition: all 0.3s ease;
+        }
+        
+        .code-input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+        }
+        
+        .background-image {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
-            background-color: #fff;
-            border-radius: 25px;
+            z-index: -1;
+            object-fit: cover;
+            filter: brightness(0.4);
+        }
+        
+        .error-message {
+            max-height: 0;
             overflow: hidden;
-            position: relative;
+            transition: max-height 0.3s ease;
         }
         
-        .status-bar {
-            height: 30px;
-            background-color: #000;
-            color: #fff;
-            display: flex;
-            justify-content: space-between;
-            padding: 5px 15px;
-            font-size: 12px;
-            align-items: center;
+        .error-message.show {
+            max-height: 100px;
         }
         
-        .samseng-logo {
-            font-weight: 700;
-            font-size: 14px;
-        }
-        
-        .frp-container {
-            padding: 20px;
-        }
-        
-        .frp-title {
-            font-size: 24px;
-            font-weight: 700;
-            margin: 20px 0;
-            text-align: center;
-            color: #333;
-        }
-        
-        .frp-subtitle {
-            font-size: 16px;
-            color: #666;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        
-        .google-account {
-            background-color: #f9f9f9;
-            border-radius: 15px;
-            padding: 15px;
-            margin-bottom: 20px;
-            border: 1px solid #e0e0e0;
-            display: flex;
-            align-items: center;
-        }
-        
-        .google-icon {
-            width: 40px;
-            height: 40px;
-            background-color: #fff;
-            border-radius: 50%;
-            margin-right: 15px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: #4285F4;
-            font-weight: bold;
-            font-size: 18px;
-            border: 1px solid #e0e0e0;
-        }
-        
-        .account-info {
-            flex: 1;
-        }
-        
-        .account-name {
-            font-weight: 500;
-            font-size: 16px;
-            margin-bottom: 3px;
-        }
-        
-        .account-email {
-            font-size: 13px;
-            color: #666;
-        }
-        
-        .frp-form {
+        .option-container {
+            display: none;
             margin-top: 20px;
-        }
-        
-        .input-group {
-            margin-bottom: 15px;
-        }
-        
-        .input-label {
-            display: block;
-            margin-bottom: 5px;
-            font-size: 14px;
-            color: #555;
-            font-weight: 500;
-        }
-        
-        .input-field {
-            width: 100%;
-            padding: 12px 15px;
-            border-radius: 8px;
-            border: 1px solid #ddd;
-            font-size: 16px;
-        }
-        
-        .btn {
-            width: 100%;
-            padding: 14px;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 500;
-            border: none;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-        
-        .btn-primary {
-            background-color: #3478F6;
-            color: white;
-        }
-        
-        .btn-secondary {
-            background-color: #f0f0f0;
-            color: #333;
-        }
-        
-        .unlock-status {
-            text-align: center;
-            margin-top: 30px;
-            display: none;
-        }
-        
-        .status-icon {
-            font-size: 60px;
-            margin-bottom: 20px;
-        }
-        
-        .status-success {
-            color: #4CAF50;
-            display: none;
-        }
-        
-        .status-error {
-            color: #F44336;
-            display: none;
-        }
-        
-        .status-text {
-            font-size: 18px;
-            margin-bottom: 20px;
-        }
-        
-        .loader {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #3498db;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            animation: spin 1s linear infinite;
-            margin: 20px auto;
-            display: none;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        .navigation-buttons {
-            position: absolute;
-            bottom: 20px;
-            width: calc(100% - 40px);
-            display: flex;
-            justify-content: space-between;
-        }
-        
-        .home-button {
-            width: 60px;
-            height: 60px;
-            background-color: #f5f5f5;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-weight: bold;
-            color: #333;
-            cursor: pointer;
-        }
-        
-        .samseng-watermark {
-            position: absolute;
-            bottom: 10px;
-            left: 0;
-            right: 0;
-            text-align: center;
-            font-size: 12px;
-            color: #aaa;
         }
     </style>
 </head>
-<body>
-    <div class="phone-frame">
-        <div class="phone-screen">
-            <div class="status-bar">
-                <div>9:41</div>
-                <div class="samseng-logo">SAMSENG</div>
-                <div>
-                    <span class="battery">100%</span>
-                </div>
+<body class="min-h-screen flex items-center justify-center p-4 font-sans">
+    <!-- Background image -->
+    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/9a2abf75-f51f-4d27-a865-d54006e7dd70.png" alt="Abstract digital background with glowing lines and nodes representing a secure network connection" class="background-image">
+    
+    <div class="login-container p-8 max-w-md w-full text-white">
+        <!-- Branding section -->
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold mb-1">Secure Access Portal</h1>
+            <p class="text-gray-300">Enter your access code to continue</p>
+        </div>
+        
+        <!-- Error message container (hidden by default) -->
+        <div id="errorMessage" class="error-message bg-red-500/30 p-3 rounded-lg mb-4">
+            <p class="text-center text-red-100" id="errorText"></p>
+        </div>
+        
+        <!-- Access form -->
+        <form id="accessForm" class="space-y-4">
+            <div>
+                <label for="accessCode" class="block text-sm font-medium mb-2">Access Code</label>
+                <input type="password" id="accessCode" class="code-input w-full p-4 rounded-lg text-xl" 
+                       placeholder="•••" maxlength="3" required autofocus>
             </div>
             
-            <div class="frp-container">
-                <div class="frp-title">Google Account Verification</div>
-                <div class="frp-subtitle">Verify it's you to continue</div>
-                
-                <div class="google-account">
-                    <div class="google-icon">G</div>
-                    <div class="account-info">
-                        <div class="account-name">Zuu Caster</div>
-                        <div class="account-email">malaysiagsm1@gmail.com</div>
+            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-lg font-medium transition duration-300 flex items-center justify-center gap-2">
+                Enter Portal
+            </button>
+        </form>
+        
+        <div class="mt-6 text-center text-sm text-gray-300">
+            <p>Contact support if you've lost your access code</p>
+        </div>
+
+        <!-- Options Section -->
+        <div id="options" class="option-container">
+            <h2 class="text-xl font-bold mb-4">Select an Option</h2>
+            <div>
+                <label class="block text-sm font-medium mb-2">
+                    <input type="radio" name="mainOption" value="telcoUnlock" class="mr-2" onclick="showSubOptions('telcoUnlock')"> TELCO UNLOCK
+                </label>
+                <div id="telcoUnlockOptions" class="ml-4 hidden">
+                    <h3 class="font-semibold">Sub Options:</h3>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">
+                            <input type="radio" name="telcoSubOption" value="oppo" class="mr-2" onclick="showDeviceOptions('oppo')"> OPPO
+                        </label>
+                        <div id="oppoDevices" class="ml-4 hidden">
+                            <ul>
+                                <li>A16 (RM50)</li>
+                                <li>A17 (RM50)</li>
+                                <li>A18 (RM50)</li>
+                                <li>A53 (RM50)</li>
+                                <li>A54 (RM50)</li>
+                                <li>A57 (RM50)</li>
+                                <li>A38 (RM50)</li>
+                                <li>A78 (RM80)</li>
+                                <li>A79 (RM80)</li>
+                                <li>reno 5pro (RM50)</li>
+                                <li>reno 5 (RM50)</li>
+                                <li>reno 6/6Z (RM70)</li>
+                                <li>reno 8 (RM70)</li>
+                                <li>reno 8pro (RM70)</li>
+                                <li>reno 10 5G (RM70)</li>
+                                <li>reno 11 5G (RM70)</li>
+                                <li>reno 11F 5G (RM100)</li>
+                                <li>reno 12F 5G (RM100)</li>
+                            </ul>
+                            <p>All OPPO devices have high security. Process time: 1-3 days.</p>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="frp-form">
-                    <div class="input-group">
-                        <label class="input-label">Password</label>
-                        <input type="password" class="input-field" id="password" placeholder="Enter your password">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">
+                            <input type="radio" name="telcoSubOption" value="vivo" class="mr-2" onclick="showDeviceOptions('vivo')"> VIVO
+                        </label>
+                        <div id="vivoDevices" class="ml-4 hidden">
+                            <ul>
+                                <li>Y16 (RM150)</li>
+                                <li>Y17 (RM150)</li>
+                                <li>Y03 (NA)</li>
+                                <li>Y77 (RM150)</li>
+                                <li>Y27 5G (RM150)</li>
+                                <li>Y28 5G (RM150)</li>
+                                <li>Y36 5G (RM150)</li>
+                                <li>Y100 (ANDROID 14 ONLY)</li>
+                            </ul>
+                            <p>All VIVO devices require CPU rework. Process time: 1-10 days depending on CPU estimate arrival.</p>
+                        </div>
                     </div>
-                    
-                    <div class="input-group">
-                        <label class="input-label">Security Code (optional)</label>
-                        <input type="text" class="input-field" id="security-code" placeholder="Enter security code if available">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">
+                            <input type="radio" name="telcoSubOption" value="honor" class="mr-2" onclick="showDeviceOptions('honor')"> HONOR
+                        </label>
+                        <div id="honorDevices" class="ml-4 hidden">
+                            <ul>
+                                <li>SMART 200 (RM150)</li>
+                                <li>X9C (RM150)</li>
+                                <li>X9B (RM150)</li>
+                                <li>X9A (RM150)</li>
+                            </ul>
+                            <p>All HONOR devices require CPU rework. Process time: 1-10 days depending on CPU estimate arrival.</p>
+                        </div>
                     </div>
-                    
-                    <button class="btn btn-primary" id="verify-btn">Verify Account</button>
-                    <button class="btn btn-secondary" id="forgot-password">Contact Support (WhatsApp)</button>
-                </div>
-                
-                <div class="unlock-status" id="unlock-status">
-                    <div class="status-icon status-success" id="success-icon">✓</div>
-                    <div class="status-icon status-error" id="error-icon">✗</div>
-                    <div class="loader" id="loader"></div>
-                    <div class="status-text" id="status-text"></div>
                 </div>
             </div>
-            
-            <div class="samseng-watermark">SAMSENG</div>
-            
-            <div class="navigation-buttons">
-                <div class="home-button">⌂</div>
+            <div>
+                <label class="block text-sm font-medium mb-2">
+                    <input type="radio" name="mainOption" value="xiaomiFRP" class="mr-2" onclick="showSubOptions('xiaomiFRP')"> XIAOMI FRP
+                </label>
+                <div id="xiaomiFRPOptions" class="ml-4 hidden">
+                    <p>Customer module download link: <a href="https://mega.nz/file/evgVCBTK#NJFzRbnbeWbBCwfJAiKAi6amJ_sS_0Id5eVkQtJJbbw" class="text-blue-400">Download Here</a></p>
+                    <p>Connect to MI Assistant mode from recovery mode.</p>
+                </div>
+            </div>
+            <div>
+                <label class="block text-sm font-medium mb-2">
+                    <input type="radio" name="mainOption" value="blacklist" class="mr-2" onclick="showSubOptions('blacklist')"> BLACKLIST HIDE
+                </label>
+                <div id="blacklistOptions" class="ml-4 hidden">
+                    <p>Tutup blacklist telco anda permenant - (RM70)</p>
+                </div>
             </div>
         </div>
     </div>
-
+    
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const verifyBtn = document.getElementById('verify-btn');
-            const forgotPasswordBtn = document.getElementById('forgot-password');
-            const unlockStatus = document.getElementById('unlock-status');
-            const successIcon = document.getElementById('success-icon');
-            const errorIcon = document.getElementById('error-icon');
-            const loader = document.getElementById('loader');
-            const statusText = document.getElementById('status-text');
-            const passwordField = document.getElementById('password');
+        document.getElementById('accessForm').addEventListener('submit', function(e) {
+            e.preventDefault();
             
-            verifyBtn.addEventListener('click', function() {
-                // Show loading state
-                unlockStatus.style.display = 'block';
-                loader.style.display = 'block';
-                successIcon.style.display = 'none';
-                errorIcon.style.display = 'none';
-                statusText.textContent = '';
-                
-                // Hide the form
-                document.querySelector('.frp-form').style.display = 'none';
-                document.querySelector('.google-account').style.display = 'none';
-                document.querySelector('.frp-subtitle').style.display = 'none';
-                
-                // Simulate processing delay
-                setTimeout(function() {
-                    loader.style.display = 'none';
-                    
-                    if(passwordField.value === 'samsungfrp') {
-                        // Successful unlock
-                        successIcon.style.display = 'block';
-                        statusText.textContent = 'Account verified successfully! FRP lock removed.';
-                        
-                        // Change phone UI to unlocked state after delay
-                        setTimeout(function() {
-                            document.querySelector('.frp-title').textContent = 'Welcome';
-                            document.querySelector('.frp-subtitle').style.display = 'block';
-                            document.querySelector('.frp-subtitle').textContent = 'Your device is ready to use';
-                            
-                            // Create a simple home screen
-                            const homeScreenHtml = `
-                                <div style="padding: 20px;">
-                                    <div style="text-align: center; margin-top: 50px;">
-                                        <img src="https://placehold.co/100x100" alt="Samsung Galaxy smartphone home screen with app icons" style="border-radius: 20px; margin-bottom: 20px;" />
-                                        <h2 style="font-size: 24px; margin-bottom: 10px;">Welcome to your Galaxy</h2>
-                                        <p style="color: #666;">Device is now fully unlocked</p>
-                                    </div>
-                                </div>
-                            `;
-                            
-                            unlockStatus.innerHTML = homeScreenHtml;
-                        }, 2000);
-                    } else {
-                        // Failed unlock
-                        errorIcon.style.display = 'block';
-                        statusText.textContent = 'Account verification failed. Please try again.';
-                        
-                        // Show the form again after delay
-                        setTimeout(function() {
-                            unlockStatus.style.display = 'none';
-                            document.querySelector('.frp-form').style.display = 'block';
-                            document.querySelector('.google-account').style.display = 'flex';
-                            document.querySelector('.frp-subtitle').style.display = 'block';
-                        }, 2000);
-                    }
-                }, 3000);
-            });
+            const codeInput = document.getElementById('accessCode');
+            const enteredCode = codeInput.value.trim().toUpperCase();
+            const errorElement = document.getElementById('errorMessage');
+            const errorText = document.getElementById('errorText');
             
-            forgotPasswordBtn.addEventListener('click', function() {
-                window.location.href = "https://wa.me/60178040403?text=Help%20with%20Samsung%20FRP%20unlock";
-            });
+            // Hide any previous error immediately
+            errorElement.classList.remove('show');
             
-            // Home button functionality
-            document.querySelector('.home-button').addEventListener('click', function() {
-                location.reload();
+            // Validate code
+            if (enteredCode.length !== 3) {
+                showError('Access code must be 3 characters long');
+                return;
+            }
+            
+            if (enteredCode !== 'ARC') {
+                showError('The ARC code is invalid. Please try again.');
+                codeInput.value = '';
+                codeInput.focus();
+                return;
+            }
+            
+            // Code is valid - show options
+            document.getElementById('options').style.display = 'block';
+        });
+        
+        function showError(message) {
+            const errorElement = document.getElementById('errorMessage');
+            const errorText = document.getElementById('errorText');
+            
+            errorText.textContent = message;
+            setTimeout(() => {
+                errorElement.classList.add('show');
+            }, 10);
+        }
+        
+        function showSubOptions(option) {
+            const subOptions = ['telcoUnlock', 'xiaomiFRP', 'blacklist'];
+            subOptions.forEach(sub => {
+                document.getElementById(sub + 'Options').style.display = 'none';
             });
+            document.getElementById(option + 'Options').style.display = 'block';
+        }
+        
+        function showDeviceOptions(device) {
+            const devices = ['oppoDevices', 'vivoDevices', 'honorDevices'];
+            devices.forEach(dev => {
+                document.getElementById(dev).style.display = 'none';
+            });
+            document.getElementById(device + 'Devices').style.display = 'block';
+        }
+        
+        // Add input formatting (uppercase and no spaces)
+        document.getElementById('accessCode').addEventListener('input', function(e) {
+            this.value = this.value.toUpperCase().replace(/\s+/g, '');
         });
     </script>
 </body>
