@@ -137,16 +137,19 @@
                         </label>
                         <div id="vivoDevices" class="ml-4 hidden">
                             <ul>
-                                <li>Y16 (RM150)</li>
-                                <li>Y17 (RM150)</li>
-                                <li>Y03 (NA)</li>
-                                <li>Y77 (RM150)</li>
-                                <li>Y27 5G (RM150)</li>
-                                <li>Y28 5G (RM150)</li>
-                                <li>Y36 5G (RM150)</li>
-                                <li>Y100 (ANDROID 14 ONLY)</li>
+                                <li>Y16 CPU (RM150)</li>
+                                <li>Y17s CPU (RM150)</li>
+                                <li>Y02t CPU (RM150)</li>
+                                <li>Y02s CPU (RM150)</li>
+                                <li>Y03 CPU (RM150)</li>
+                                <li>Y18 CPU (RM150)</li>
+                                <li>Y36 5g CPU (RM200)</li>
+                                <li>Y27 5g CPU (RM200)</li>
+                                <li>Y77 5g CPU (RM200)</li>
+                                <li>Y76 5g CPU (RM200)</li>
+                                <li>Y30 5g CPU (RM200)</li>
                             </ul>
-                            <p>All VIVO devices require CPU rework. Process time: 1-10 days depending on CPU estimate arrival.</p>
+                            <p>All processes for CPU rework need 1-10 days depending on CPU estimate arrival.</p>
                         </div>
                     </div>
                     <div>
@@ -155,23 +158,59 @@
                         </label>
                         <div id="honorDevices" class="ml-4 hidden">
                             <ul>
-                                <li>SMART 200 (RM150)</li>
-                                <li>X9C (RM150)</li>
-                                <li>X9B (RM150)</li>
-                                <li>X9A (RM150)</li>
+                                <li>SMART 200 (CPU) (RM150)</li>
+                                <li>X9C (CPU) (RM150)</li>
                             </ul>
-                            <p>All HONOR devices require CPU rework. Process time: 1-10 days depending on CPU estimate arrival.</p>
+                            <p>All processes for CPU rework need 1-10 days depending on CPU estimate arrival.</p>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">
+                            <input type="radio" name="telcoSubOption" value="realme" class="mr-2" onclick="showDeviceOptions('realme')"> REALME
+                        </label>
+                        <div id="realmeDevices" class="ml-4 hidden">
+                            <ul>
+                                <li>NOTE 50 (RM50)</li>
+                                <li>NOTE 55 (RM50)</li>
+                                <li>NOTE 60 (RM50)</li>
+                                <li>C53 (RM50)</li>
+                                <li>C55 (RM70)</li>
+                                <li>11 5G ANDROID 14/15 (RM80)/(RM120)</li>
+                                <li>11X 5G ANDROID 14/15 (RM80)/(RM120)</li>
+                                <li>12 5G ANDROID 14/15 (RM80)/(RM120)</li>
+                                <li>12X 5G ANDROID 14/15 (RM80)/(RM120)</li>
+                                <li>12 PRO 5G ANDROID 14/15 (RM80)/(RM120)</li>
+                                <li>13 5G ANDROID 14/15 (RM80)/(RM120)</li>
+                                <li>14X 5G (CPU) (RM150)</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
             </div>
             <div>
                 <label class="block text-sm font-medium mb-2">
-                    <input type="radio" name="mainOption" value="xiaomiFRP" class="mr-2" onclick="showSubOptions('xiaomiFRP')"> XIAOMI FRP
+                    <input type="radio" name="mainOption" value="frp" class="mr-2" onclick="showSubOptions('frp')"> FRP
                 </label>
-                <div id="xiaomiFRPOptions" class="ml-4 hidden">
-                    <p>Customer module download link: <a href="https://mega.nz/file/evgVCBTK#NJFzRbnbeWbBCwfJAiKAi6amJ_sS_0Id5eVkQtJJbbw" class="text-blue-400">Download Here</a></p>
-                    <p>Connect to MI Assistant mode from recovery mode.</p>
+                <div id="frpOptions" class="ml-4 hidden">
+                    <ul>
+                        <li>HONOR SERVER all model (RM170) (INSTANT 1 HOUR - 4 HOURS)</li>
+                        <li>CPU REWORK VIVO/IQOO SUPER LATEST BRAND (RM200-300)</li>
+                        <li>HUAWEI ID (KIRIN 9000++) CPU REWORK (RM200-250)</li>
+                        <li>XIAOMI ALL MODEL (RM50)</li>
+                    </ul>
+                    <p>All processes for CPU rework need 1-10 days depending on CPU estimate arrival.</p>
+                </div>
+            </div>
+            <div>
+                <label class="block text-sm font-medium mb-2">
+                    <input type="radio" name="mainOption" value="accountLock" class="mr-2" onclick="showSubOptions('accountLock')"> ACCOUNT LOCK/SIMLOCK
+                </label>
+                <div id="accountLockOptions" class="ml-4 hidden">
+                    <ul>
+                        <li>PIXEL 9 PRO (TELCO/SIMLOCK) (RM60)</li>
+                        <li>MI ACCOUNT (MALAYSIA/WORLDWIDE) (RM60/150)</li>
+                        <li>HUAWEI ID (RM100-150)</li>
+                    </ul>
                 </div>
             </div>
             <div>
@@ -225,7 +264,7 @@
         }
         
         function showSubOptions(option) {
-            const subOptions = ['telcoUnlock', 'xiaomiFRP', 'blacklist'];
+            const subOptions = ['telcoUnlock', 'frp', 'accountLock', 'blacklist'];
             subOptions.forEach(sub => {
                 document.getElementById(sub + 'Options').style.display = 'none';
             });
@@ -233,7 +272,7 @@
         }
         
         function showDeviceOptions(device) {
-            const devices = ['oppoDevices', 'vivoDevices', 'honorDevices'];
+            const devices = ['oppoDevices', 'vivoDevices', 'honorDevices', 'realmeDevices'];
             devices.forEach(dev => {
                 document.getElementById(dev).style.display = 'none';
             });
