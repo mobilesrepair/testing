@@ -1,114 +1,151 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Customer Feedback</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            font-family: 'Inter', sans-serif;
-        }
-        .star {
-            font-size: 2rem;
-            cursor: pointer;
-            transition: color 0.3s;
-        }
-        .star.selected {
-            color: #ffd700;
-        }
-        .star:hover {
-            color: #ffd700;
-        }
-        .feedback-form {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-        }
-        .thank-you {
-            display: none;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-            text-align: center;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Customer Feedback</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      font-family: 'Inter', sans-serif;
+    }
+    .star {
+      font-size: 2rem;
+      cursor: pointer;
+      transition: color 0.3s;
+    }
+    .star.selected {
+      color: #ffd700;
+    }
+    .star:hover {
+      color: #ffd700;
+    }
+    .feedback-form {
+      /* Removed background and box-shadow */
+      border-radius: 20px;
+      /* Optional: add some padding or border if needed */
+    }
+    .thank-you {
+      display: none;
+      /* Removed background and box-shadow */
+      border-radius: 20px;
+      text-align: center;
+    }
+  </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-4">
-    <div class="w-full max-w-md">
-        <!-- Feedback Form -->
-        <div id="feedbackForm" class="feedback-form p-8">
-            <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">Customer Feedback</h1>
-            <form id="feedbackFormElement">
-                <div class="mb-4">
-                    <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Name / Nama</label>
-                    <input type="text" id="name" name="name" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" />
-                </div>
-                <div class="mb-4">
-                    <label for="feedback" class="block text-sm font-medium text-gray-700 mb-1">Feedback</label>
-                    <textarea id="feedback" name="feedback" rows="4" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"></textarea>
-                </div>
-                <div class="mb-4">
-                    <label for="phoneModel" class="block text-sm font-medium text-gray-700 mb-1">Model Phone</label>
-                    <input type="text" id="phoneModel" name="phoneModel" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" />
-                </div>
-                <div class="mb-6">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Rating (1-5 Stars)</label>
-                    <div class="flex justify-center">
-                        <span class="star" data-rating="1">★</span>
-                        <span class="star" data-rating="2">★</span>
-                        <span class="star" data-rating="3">★</span>
-                        <span class="star" data-rating="4">★</span>
-                        <span class="star" data-rating="5">★</span>
-                    </div>
-                    <input type="hidden" id="rating" name="rating" value="0" />
-                </div>
-                <button type="submit" class="w-full bg-gradient-to-r from-purple-500 to-blue-500 text-white py-3 rounded-lg font-semibold hover:from-purple-600 hover:to-blue-600 transition duration-300">Submit Feedback</button>
-            </form>
+  <div class="w-full max-w-md">
+    <!-- Feedback Form -->
+    <div id="feedbackForm" class="feedback-form p-8">
+      <h1 class="text-3xl font-bold text-center text-white mb-6">Customer Feedback</h1>
+      <form id="feedbackFormElement">
+        <div class="mb-4">
+          <label for="name" class="block text-sm font-medium text-white mb-1">Name / Nama</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            required
+            class="w-full px-4 py-3 border border-white rounded-lg bg-transparent text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+            placeholder="Your name"
+          />
         </div>
-
-        <!-- Thank You Section -->
-        <div id="thankYou" class="thank-you p-8">
-            <h2 class="text-2xl font-bold text-gray-800 mb-4">Thank You for Your Feedback!</h2>
-            <p class="text-gray-600 mb-6">Your feedback has been submitted successfully. We appreciate your input.</p>
-            <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/fc063dde-98e6-4740-a216-89cb3fd5cdb9.png" alt="Illustration of a grateful gesture with open hands in a modern, warm color palette featuring soft blues and greens, symbolizing thanks and appreciation for user feedback" />
-            <div class="mt-6">
-                <p class="text-sm text-gray-600 mb-4">To let everyone know, please share your feedback on Facebook and tag me!</p>
-                <a href="https://www.facebook.com/sharer/sharer.php?u=https://your-website-url.com&quote=I just submitted feedback on your site! Tagging @zuu.caster.2025" target="_blank" class="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-300 mb-4">Share & Tag on Facebook</a>
-                <p class="text-xs text-gray-500">Click to open Facebook share. When posting, select '@zuu.caster.2025' from the suggestions to tag me.</p>
-            </div>
+        <div class="mb-4">
+          <label for="feedback" class="block text-sm font-medium text-white mb-1">Feedback</label>
+          <textarea
+            id="feedback"
+            name="feedback"
+            rows="4"
+            required
+            class="w-full px-4 py-3 border border-white rounded-lg bg-transparent text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+            placeholder="Your feedback"
+          ></textarea>
         </div>
+        <div class="mb-4">
+          <label for="phoneModel" class="block text-sm font-medium text-white mb-1">Model Phone</label>
+          <input
+            type="text"
+            id="phoneModel"
+            name="phoneModel"
+            required
+            class="w-full px-4 py-3 border border-white rounded-lg bg-transparent text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+            placeholder="Your phone model"
+          />
+        </div>
+        <div class="mb-6">
+          <label class="block text-sm font-medium text-white mb-2">Rating (1-5 Stars)</label>
+          <div class="flex justify-center">
+            <span class="star" data-rating="1">★</span>
+            <span class="star" data-rating="2">★</span>
+            <span class="star" data-rating="3">★</span>
+            <span class="star" data-rating="4">★</span>
+            <span class="star" data-rating="5">★</span>
+          </div>
+          <input type="hidden" id="rating" name="rating" value="0" />
+        </div>
+        <button
+          type="submit"
+          class="w-full bg-gradient-to-r from-purple-500 to-blue-500 text-white py-3 rounded-lg font-semibold hover:from-purple-600 hover:to-blue-600 transition duration-300"
+        >
+          Submit Feedback
+        </button>
+      </form>
     </div>
 
-    <script>
-        const stars = document.querySelectorAll('.star');
-        const ratingInput = document.getElementById('rating');
-        const form = document.getElementById('feedbackFormElement');
-        const feedbackForm = document.getElementById('feedbackForm');
-        const thankYou = document.getElementById('thankYou');
+    <!-- Thank You Section -->
+    <div id="thankYou" class="thank-you p-8">
+      <h2 class="text-2xl font-bold text-white mb-4">Thank You for Your Feedback!</h2>
+      <p class="text-white mb-6">
+        Your feedback has been submitted successfully. We appreciate your input.
+      </p>
+      <img
+        src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/fc063dde-98e6-4740-a216-89cb3fd5cdb9.png"
+        alt="Illustration of a grateful gesture with open hands in a modern, warm color palette featuring soft blues and greens, symbolizing thanks and appreciation for user feedback"
+      />
+      <div class="mt-6">
+        <p class="text-sm text-white mb-4">
+          To let everyone know, please share your feedback on Facebook and tag me!
+        </p>
+        <a
+          href="https://www.facebook.com/sharer/sharer.php?u=https://mobilesrepair.github.io/FAQ&quote=I just submitted feedback on your site! Tagging @zuu.caster.2025"
+          target="_blank"
+          class="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-300 mb-4"
+          >Share & Tag on Facebook</a
+        >
+        <p class="text-xs text-white">
+          Click to open Facebook share. When posting, select '@zuu.caster.2025' from the suggestions to tag me.
+        </p>
+      </div>
+    </div>
+  </div>
 
-        stars.forEach(star => {
-            star.addEventListener('click', () => {
-                const rating = star.getAttribute('data-rating');
-                ratingInput.value = rating;
-                stars.forEach(s => {
-                    if (parseInt(s.getAttribute('data-rating')) <= parseInt(rating)) {
-                        s.classList.add('selected');
-                    } else {
-                        s.classList.remove('selected');
-                    }
-                });
-            });
-        });
+  <script>
+    const stars = document.querySelectorAll('.star');
+    const ratingInput = document.getElementById('rating');
+    const form = document.getElementById('feedbackFormElement');
+    const feedbackForm = document.getElementById('feedbackForm');
+    const thankYou = document.getElementById('thankYou');
 
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            feedbackForm.style.display = 'none';
-            thankYou.style.display = 'block';
+    stars.forEach((star) => {
+      star.addEventListener('click', () => {
+        const rating = star.getAttribute('data-rating');
+        ratingInput.value = rating;
+        stars.forEach((s) => {
+          if (parseInt(s.getAttribute('data-rating')) <= parseInt(rating)) {
+            s.classList.add('selected');
+          } else {
+            s.classList.remove('selected');
+          }
         });
-    </script>
+      });
+    });
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      feedbackForm.style.display = 'none';
+      thankYou.style.display = 'block';
+    });
+  </script>
 </body>
 </html>
-</content>
-</create_file>
