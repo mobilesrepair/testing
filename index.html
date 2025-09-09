@@ -3,287 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Secure Access Portal</title>
+    <title>Customer Feedback</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        .login-container {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 16px;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            transition: all 0.3s ease;
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Inter', sans-serif;
         }
-        
-        .login-container:hover {
-            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.2);
-            transform: translateY(-5px);
+        .star {
+            font-size: 2rem;
+            cursor: pointer;
+            transition: color 0.3s;
         }
-        
-        .code-input {
-            letter-spacing: 5px;
-            text-align: center;
-            background: rgba(255, 255, 255, 0.1);
-            border: none;
-            transition: all 0.3s ease;
+        .star.selected {
+            color: #ffd700;
         }
-        
-        .code-input:focus {
-            outline: none;
-            background: rgba(255, 255, 255, 0.2);
-            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+        .star:hover {
+            color: #ffd700;
         }
-        
-        .background-image {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            object-fit: cover;
-            filter: brightness(0.4);
+        .feedback-form {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
         }
-        
-        .error-message {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease;
-        }
-        
-        .error-message.show {
-            max-height: 100px;
-        }
-        
-        .option-container {
+        .thank-you {
             display: none;
-            margin-top: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            text-align: center;
         }
     </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-4 font-sans">
-    <!-- Background image -->
-    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/9a2abf75-f51f-4d27-a865-d54006e7dd70.png" alt="Abstract digital background with glowing lines and nodes representing a secure network connection" class="background-image">
-    
-    <div class="login-container p-8 max-w-md w-full text-white">
-        <!-- Branding section -->
-        <div class="text-center mb-8">
-            <h1 class="text-3xl font-bold mb-1">Secure Access Portal</h1>
-            <p class="text-gray-300">Enter your access code to continue</p>
-        </div>
-        
-        <!-- Error message container (hidden by default) -->
-        <div id="errorMessage" class="error-message bg-red-500/30 p-3 rounded-lg mb-4">
-            <p class="text-center text-red-100" id="errorText"></p>
-        </div>
-        
-        <!-- Access form -->
-        <form id="accessForm" class="space-y-4">
-            <div>
-                <label for="accessCode" class="block text-sm font-medium mb-2">Access Code</label>
-                <input type="password" id="accessCode" class="code-input w-full p-4 rounded-lg text-xl" 
-                       placeholder="•••" maxlength="3" required autofocus>
-            </div>
-            
-            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-lg font-medium transition duration-300 flex items-center justify-center gap-2">
-                Enter Portal
-            </button>
-        </form>
-        
-        <div class="mt-6 text-center text-sm text-gray-300">
-            <p>Contact support if you've lost your access code</p>
+<body class="min-h-screen flex items-center justify-center p-4">
+    <div class="w-full max-w-md">
+        <!-- Feedback Form -->
+        <div id="feedbackForm" class="feedback-form p-8">
+            <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">Customer Feedback</h1>
+            <form id="feedbackFormElement">
+                <div class="mb-4">
+                    <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Name / Nama</label>
+                    <input type="text" id="name" name="name" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                </div>
+                <div class="mb-4">
+                    <label for="feedback" class="block text-sm font-medium text-gray-700 mb-1">Feedback</label>
+                    <textarea id="feedback" name="feedback" rows="4" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"></textarea>
+                </div>
+                <div class="mb-4">
+                    <label for="phoneModel" class="block text-sm font-medium text-gray-700 mb-1">Model Phone</label>
+                    <input type="text" id="phoneModel" name="phoneModel" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                </div>
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Rating (1-5 Stars)</label>
+                    <div class="flex justify-center">
+                        <span class="star" data-rating="1">★</span>
+                        <span class="star" data-rating="2">★</span>
+                        <span class="star" data-rating="3">★</span>
+                        <span class="star" data-rating="4">★</span>
+                        <span class="star" data-rating="5">★</span>
+                    </div>
+                    <input type="hidden" id="rating" name="rating" value="0">
+                </div>
+                <button type="submit" class="w-full bg-gradient-to-r from-purple-500 to-blue-500 text-white py-3 rounded-lg font-semibold hover:from-purple-600 hover:to-blue-600 transition duration-300">Submit Feedback</button>
+            </form>
         </div>
 
-        <!-- Options Section -->
-        <div id="options" class="option-container">
-            <h2 class="text-xl font-bold mb-4">Select an Option</h2>
-            <div>
-                <label class="block text-sm font-medium mb-2">
-                    <input type="radio" name="mainOption" value="telcoUnlock" class="mr-2" onclick="showSubOptions('telcoUnlock')"> TELCO UNLOCK
-                </label>
-                <div id="telcoUnlockOptions" class="ml-4 hidden">
-                    <h3 class="font-semibold">Sub Options:</h3>
-                    <div>
-                        <label class="block text-sm font-medium mb-1">
-                            <input type="radio" name="telcoSubOption" value="oppo" class="mr-2" onclick="showDeviceOptions('oppo')"> OPPO
-                        </label>
-                        <div id="oppoDevices" class="ml-4 hidden">
-                            <ul>
-                                <li>A16 (RM50)</li>
-                                <li>A17 (RM50)</li>
-                                <li>A18 (RM50)</li>
-                                <li>A53 (RM50)</li>
-                                <li>A54 (RM50)</li>
-                                <li>A57 (RM50)</li>
-                                <li>A38 (RM50)</li>
-                                <li>A78 (RM80)</li>
-                                <li>A79 (RM80)</li>
-                                <li>reno 5pro (RM50)</li>
-                                <li>reno 5 (RM50)</li>
-                                <li>reno 6/6Z (RM70)</li>
-                                <li>reno 8 (RM70)</li>
-                                <li>reno 8pro (RM70)</li>
-                                <li>reno 10 5G (RM70)</li>
-                                <li>reno 11 5G (RM70)</li>
-                                <li>reno 11F 5G (RM100)</li>
-                                <li>reno 12F 5G (RM100)</li>
-                            </ul>
-                            <p>All OPPO devices have high security. Process time: 1-3 days.</p>
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium mb-1">
-                            <input type="radio" name="telcoSubOption" value="vivo" class="mr-2" onclick="showDeviceOptions('vivo')"> VIVO
-                        </label>
-                        <div id="vivoDevices" class="ml-4 hidden">
-                            <ul>
-                                <li>Y16 CPU (RM150)</li>
-                                <li>Y17s CPU (RM150)</li>
-                                <li>Y02t CPU (RM150)</li>
-                                <li>Y02s CPU (RM150)</li>
-                                <li>Y03 CPU (RM150)</li>
-                                <li>Y18 CPU (RM150)</li>
-                                <li>Y36 5g CPU (RM200)</li>
-                                <li>Y27 5g CPU (RM200)</li>
-                                <li>Y77 5g CPU (RM200)</li>
-                                <li>Y76 5g CPU (RM200)</li>
-                                <li>Y30 5g CPU (RM200)</li>
-                            </ul>
-                            <p>All processes for CPU rework need 1-10 days depending on CPU estimate arrival.</p>
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium mb-1">
-                            <input type="radio" name="telcoSubOption" value="honor" class="mr-2" onclick="showDeviceOptions('honor')"> HONOR
-                        </label>
-                        <div id="honorDevices" class="ml-4 hidden">
-                            <ul>
-                                <li>SMART 200 (CPU) (RM150)</li>
-                                <li>X9C (CPU) (RM150)</li>
-                            </ul>
-                            <p>All processes for CPU rework need 1-10 days depending on CPU estimate arrival.</p>
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium mb-1">
-                            <input type="radio" name="telcoSubOption" value="realme" class="mr-2" onclick="showDeviceOptions('realme')"> REALME
-                        </label>
-                        <div id="realmeDevices" class="ml-4 hidden">
-                            <ul>
-                                <li>NOTE 50 (RM50)</li>
-                                <li>NOTE 55 (RM50)</li>
-                                <li>NOTE 60 (RM50)</li>
-                                <li>C53 (RM50)</li>
-                                <li>C55 (RM70)</li>
-                                <li>11 5G ANDROID 14/15 (RM80)/(RM120)</li>
-                                <li>11X 5G ANDROID 14/15 (RM80)/(RM120)</li>
-                                <li>12 5G ANDROID 14/15 (RM80)/(RM120)</li>
-                                <li>12X 5G ANDROID 14/15 (RM80)/(RM120)</li>
-                                <li>12 PRO 5G ANDROID 14/15 (RM80)/(RM120)</li>
-                                <li>13 5G ANDROID 14/15 (RM80)/(RM120)</li>
-                                <li>14X 5G (CPU) (RM150)</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div>
-                <label class="block text-sm font-medium mb-2">
-                    <input type="radio" name="mainOption" value="frp" class="mr-2" onclick="showSubOptions('frp')"> FRP
-                </label>
-                <div id="frpOptions" class="ml-4 hidden">
-                    <ul>
-                        <li>HONOR SERVER all model (RM170) (INSTANT 1 HOUR - 4 HOURS)</li>
-                        <li>CPU REWORK VIVO/IQOO SUPER LATEST BRAND (RM200-300)</li>
-                        <li>HUAWEI ID (KIRIN 9000++) CPU REWORK (RM200-250)</li>
-                        <li>XIAOMI - (RM50-RM150)</li>
-                        <li>XIAOMI AUTH FLASH - (RM100)</li>
-                    </ul>
-                    <p>All processes for CPU rework need 1-10 days depending on CPU estimate arrival.</p>
-                </div>
-            </div>
-            <div>
-                <label class="block text-sm font-medium mb-2">
-                    <input type="radio" name="mainOption" value="accountLock" class="mr-2" onclick="showSubOptions('accountLock')"> ACCOUNT LOCK/SIMLOCK
-                </label>
-                <div id="accountLockOptions" class="ml-4 hidden">
-                    <ul>
-                        <li>PIXEL 9 PRO (TELCO/SIMLOCK) (RM60)</li>
-                        <li>MI ACCOUNT (MALAYSIA/WORLDWIDE) (RM60/150)</li>
-                        <li>HUAWEI ID (RM100-150)</li>
-                    </ul>
-                </div>
-            </div>
-            <div>
-                <label class="block text-sm font-medium mb-2">
-                    <input type="radio" name="mainOption" value="blacklist" class="mr-2" onclick="showSubOptions('blacklist')"> BLACKLIST HIDE
-                </label>
-                <div id="blacklistOptions" class="ml-4 hidden">
-                    <p>Tutup blacklist telco anda permenant - (RM70)</p>
-                </div>
+        <!-- Thank You Section -->
+        <div id="thankYou" class="thank-you p-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Thank You for Your Feedback!</h2>
+            <p class="text-gray-600 mb-6">Your feedback has been submitted successfully. We appreciate your input.</p>
+            <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/fc063dde-98e6-4740-a216-89cb3fd5cdb9.png" alt="Illustration of a grateful gesture with open hands in a modern, warm color palette featuring soft blues and greens, symbolizing thanks and appreciation for user feedback" />
+            <div class="mt-6">
+                <a href="https://www.facebook.com/zuu.caster" target="_blank" class="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-300">Tag Zuu Caster on Facebook</a>
             </div>
         </div>
     </div>
-    
+
     <script>
-        document.getElementById('accessForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const codeInput = document.getElementById('accessCode');
-            const enteredCode = codeInput.value.trim().toUpperCase();
-            const errorElement = document.getElementById('errorMessage');
-            const errorText = document.getElementById('errorText');
-            
-            // Hide any previous error immediately
-            errorElement.classList.remove('show');
-            
-            // Validate code
-            if (enteredCode.length !== 3) {
-                showError('Access code must be 3 characters long');
-                return;
-            }
-            
-            if (enteredCode !== 'ARC') {
-                showError('The ARC code is invalid. Please try again.');
-                codeInput.value = '';
-                codeInput.focus();
-                return;
-            }
-            
-            // Code is valid - show options
-            document.getElementById('options').style.display = 'block';
+        const stars = document.querySelectorAll('.star');
+        const ratingInput = document.getElementById('rating');
+        const form = document.getElementById('feedbackFormElement');
+        const feedbackForm = document.getElementById('feedbackForm');
+        const thankYou = document.getElementById('thankYou');
+
+        stars.forEach(star => {
+            star.addEventListener('click', () => {
+                const rating = star.getAttribute('data-rating');
+                ratingInput.value = rating;
+                stars.forEach(s => {
+                    if (parseInt(s.getAttribute('data-rating')) <= parseInt(rating)) {
+                        s.classList.add('selected');
+                    } else {
+                        s.classList.remove('selected');
+                    }
+                });
+            });
         });
-        
-        function showError(message) {
-            const errorElement = document.getElementById('errorMessage');
-            const errorText = document.getElementById('errorText');
-            
-            errorText.textContent = message;
-            setTimeout(() => {
-                errorElement.classList.add('show');
-            }, 10);
-        }
-        
-        function showSubOptions(option) {
-            const subOptions = ['telcoUnlock', 'frp', 'accountLock', 'blacklist'];
-            subOptions.forEach(sub => {
-                document.getElementById(sub + 'Options').style.display = 'none';
-            });
-            document.getElementById(option + 'Options').style.display = 'block';
-        }
-        
-        function showDeviceOptions(device) {
-            const devices = ['oppoDevices', 'vivoDevices', 'honorDevices', 'realmeDevices'];
-            devices.forEach(dev => {
-                document.getElementById(dev).style.display = 'none';
-            });
-            document.getElementById(device + 'Devices').style.display = 'block';
-        }
-        
-        // Add input formatting (uppercase and no spaces)
-        document.getElementById('accessCode').addEventListener('input', function(e) {
-            this.value = this.value.toUpperCase().replace(/\s+/g, '');
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            feedbackForm.style.display = 'none';
+            thankYou.style.display = 'block';
         });
     </script>
 </body>
 </html>
+</content>
+</create_file>
