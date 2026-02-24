@@ -41,6 +41,7 @@ cursor:pointer;
 margin-top:15px;
 text-align:left;
 font-size:14px;
+white-space:pre-wrap;
 }
 </style>
 </head>
@@ -49,7 +50,7 @@ font-size:14px;
 
 <div class="card">
 
-<h3>🔐 Login OTP</h3>
+<h3>Login OTP</h3>
 
 <input id="email" placeholder="Email">
 <button onclick="sendOTP()">Send OTP</button>
@@ -59,7 +60,7 @@ font-size:14px;
 
 <hr>
 
-<h3>📱 Check IMEI</h3>
+<h3>Check IMEI</h3>
 
 <input id="imei" placeholder="IMEI">
 <button onclick="checkIMEI()">Check</button>
@@ -73,18 +74,20 @@ font-size:14px;
 const API="https://plain-pond-c616.r3dvelvet92.workers.dev";
 
 async function sendOTP(){
-const r=await fetch(API+"/send-otp",{
+
+const res = await fetch(API+"/send-otp",{
 method:"POST",
 headers:{'Content-Type':'application/json'},
 body:JSON.stringify({email:email.value})
 });
-const d=await r.json();
-alert("OTP: "+d.otp); // temp
+
+const data = await res.json();
+alert("OTP: "+data.otp);
 }
 
 async function login(){
 
-const r=await fetch(API+"/verify-otp",{
+const res = await fetch(API+"/verify-otp",{
 method:"POST",
 headers:{'Content-Type':'application/json'},
 body:JSON.stringify({
@@ -93,29 +96,30 @@ otp:otp.value
 })
 });
 
-if(!r.ok){alert("Login failed");return;}
+if(!res.ok){
+alert("Login failed");
+return;
+}
 
-const d=await r.json();
+const data = await res.json();
 
-localStorage.email=email.value;
-localStorage.token=d.token;
-
+localStorage.setItem("email",email.value);
 alert("Login success");
 }
 
 async function checkIMEI(){
 
-const r=await fetch(API+"/check-imei",{
+const res = await fetch(API+"/check-imei",{
 method:"POST",
 headers:{'Content-Type':'application/json'},
 body:JSON.stringify({
-email:localStorage.email,
+email:localStorage.getItem("email"),
 imei:imei.value
 })
 });
 
-const data=await r.text();
-result.innerText=data;
+const text = await res.text();
+result.innerText=text;
 }
 
 </script>
