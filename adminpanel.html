@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<body style="font-family:sans-serif;text-align:center">
+
+<h2>🔐 Admin Login</h2>
+
+<input id="email" placeholder="Admin Email">
+<button onclick="sendOTP()">Send OTP</button>
+
+<input id="otp" placeholder="OTP">
+<button onclick="adminLogin()">Login</button>
+
+<hr>
+
+<h3>Add User Balance</h3>
+
+<input id="userEmail" placeholder="User Email">
+<input id="amount" placeholder="Amount RM">
+
+<button onclick="addBalance()">Add Balance</button>
+
+<script>
+
+const API="https://plain-pond-c616.r3dvelvet92.workers.dev";
+let ADMIN_TOKEN="";
+
+// send OTP using normal login
+async function sendOTP(){
+await fetch(API+"/login",{
+method:"POST",
+headers:{'Content-Type':'application/json'},
+body:JSON.stringify({email:email.value})
+});
+alert("OTP sent to admin email");
+}
+
+// admin login
+async function adminLogin(){
+
+const res=await fetch(API+"/admin/login",{
+method:"POST",
+headers:{'Content-Type':'application/json'},
+body:JSON.stringify({
+email:email.value,
+otp:otp.value
+})
+});
+
+const data=await res.json();
+
+if(data.token){
+ADMIN_TOKEN=data.token;
+alert("Admin login success");
+}else{
+alert("Login failed");
+}
+}
+
+// add balance
+async function addBalance(){
+
+await fetch(API+"/admin/add-balance",{
+method:"POST",
+headers:{
+'Content-Type':'application/json',
+'x-session-token':ADMIN_TOKEN
+},
+body:JSON.stringify({
+email:userEmail.value,
+amount:parseFloat(amount.value)
+})
+});
+
+alert("Balance Added ✅");
+}
+
+</script>
+
+</body>
+</html>
