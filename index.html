@@ -7,97 +7,81 @@
 <style>
 body{
 font-family:Segoe UI;
-background:#f4f6f9;
+background:#0f172a;
+color:white;
 text-align:center;
+margin:0;
 }
 
 .box{
-background:white;
+background:#111827;
 max-width:420px;
 margin:40px auto;
 padding:25px;
 border-radius:12px;
-box-shadow:0 10px 30px rgba(0,0,0,.1);
+box-shadow:0 0 20px rgba(0,0,0,.4);
 }
 
 input,select,button{
 width:100%;
 padding:12px;
 margin-top:10px;
+border-radius:8px;
+border:none;
+}
+
+input,select{
+background:#1f2937;
+color:white;
 }
 
 button{
-background:#0b57d0;
+background:#22c55e;
 color:white;
-border:none;
-border-radius:8px;
+font-weight:bold;
 cursor:pointer;
 }
 
-.hidden{display:none}
+button:hover{
+background:#16a34a;
+}
 
 .result{
 margin-top:15px;
-background:#eee;
-padding:10px;
+background:#020617;
+padding:12px;
 border-radius:8px;
-white-space:pre-wrap;
 text-align:left;
+white-space:pre-wrap;
 }
+
+.hidden{display:none}
 </style>
 </head>
 
 <body>
 
-<!-- REGISTER -->
-<div id="registerPage" class="box">
-<h3>Register</h3>
-
-<input id="regEmail" placeholder="Email">
-<button onclick="register()">Register</button>
-
-<input id="regOtp" placeholder="OTP">
-<button onclick="verifyRegister()">Verify OTP</button>
-
-<hr>
-<button onclick="showLogin()">Already have account?</button>
-</div>
-
-
 <!-- LOGIN -->
-<div id="loginPage" class="box hidden">
-<h3>Login</h3>
+<div id="loginBox" class="box">
+<h2>CheckPhone Panel</h2>
 
-<input id="email" placeholder="Email">
-<button onclick="login()">Send OTP</button>
+<input id="email" placeholder="Enter Email">
 
-<input id="otp" placeholder="OTP">
-<button onclick="verifyLogin()">Login</button>
+<button onclick="login()">Login / Register</button>
 
-<hr>
-<button onclick="showRegister()">Create Account</button>
 </div>
 
 
 <!-- DASHBOARD -->
-<div id="dashboardPage" class="box hidden">
+<div id="dashBox" class="box hidden">
 
-<h3>Dashboard</h3>
+<h3 id="wallet">Balance: RM 0</h3>
 
-<div id="wallet"></div>
-
-<select id="service" onchange="loadPrice()">
-<option value="12">Basic Info</option>
-<option value="105">Apple Sold By</option>
-<option value="30">Apple FMI</option>
-<option value="41">Samsung Info</option>
-</select>
-
-<div id="priceBox"></div>
+<select id="service"></select>
 
 <input id="imei" placeholder="Enter IMEI">
 
-<button onclick="checkIMEI()">Check IMEI</button>
+<button onclick="checkIMEI()">CHECK</button>
 
 <div id="result" class="result"></div>
 
@@ -108,131 +92,104 @@ text-align:left;
 
 <script>
 
-const API="https://plain-pond-c616.r3dvelvet92.workers.dev";
+const API="https://YOUR-WORKER.workers.dev";
 
-// ================= PAGE SWITCH =================
-function showRegister(){
-registerPage.classList.remove("hidden");
-loginPage.classList.add("hidden");
-}
+let SESSION="";
+let EMAIL="";
 
-function showLogin(){
-registerPage.classList.add("hidden");
-loginPage.classList.remove("hidden");
-}
+/* ================= LOGIN ================= */
 
-function showDashboard(balance){
-loginPage.classList.add("hidden");
-registerPage.classList.add("hidden");
-dashboardPage.classList.remove("hidden");
+async function login(){
 
-wallet.innerText="Balance: RM "+balance;
-}
-
-// ================= REGISTER =================
-async function register(){
+EMAIL=email.value;
 
 await fetch(API+"/register",{
 method:"POST",
 headers:{'Content-Type':'application/json'},
-body:JSON.stringify({email:regEmail.value})
+body:JSON.stringify({email:EMAIL})
 });
 
-alert("OTP sent to email");
-}
-
-async function verifyRegister(){
-
-const res=await fetch(API+"/verify-register",{
+const res=await fetch(API+"/login",{
 method:"POST",
 headers:{'Content-Type':'application/json'},
-body:JSON.stringify({
-email:regEmail.value,
-otp:regOtp.value
-})
+body:JSON.stringify({email:EMAIL})
 });
 
 const data=await res.json();
 
-if(data.success){
-alert("Account verified");
-showLogin();
-}else{
-alert("Invalid OTP");
-}
+SESSION=data.session;
+
+localStorage.session=SESSION;
+localStorage.email=EMAIL;
+
+loadDashboard();
 }
 
-// ================= LOGIN =================
-async function login(){
+/* ================= DASHBOARD ================= */
 
-await fetch(API+"/login",{
-method:"POST",
-headers:{'Content-Type':'application/json'},
-body:JSON.stringify({email:email.value})
+async function loadDashboard(){
+
+loginBox.classList.add("hidden");
+dashBox.classList.remove("hidden");
+
+SESSION=localStorage.session;
+EMAIL=localStorage.email;
+
+/* wallet */
+const user=await fetch(API+"/dashboard",{
+headers:{session:SESSION}
+}).then(r=>r.json());
+
+wallet.innerText="Balance: RM "+user.credit;
+
+/* load services */
+const services=await fetch(API+"/services")
+.then(r=>r.json());
+
+let html="";
+
+services.forEach(s=>{
+html+=`<option value="${s.id}">
+${s.name}
+</option>`;
 });
 
-alert("OTP sent");
+service.innerHTML=html;
 }
 
-async function verifyLogin(){
+/* ================= CHECK ================= */
 
-const res=await fetch(API+"/verify-login",{
-method:"POST",
-headers:{'Content-Type':'application/json'},
-body:JSON.stringify({
-email:email.value,
-otp:otp.value
-})
-});
-
-const data=await res.json();
-
-if(data.success){
-localStorage.email=email.value;
-localStorage.balance=data.balance;
-showDashboard(data.balance);
-}else{
-alert("Login failed");
-}
-}
-
-// ================= LOAD PRICE =================
-async function loadPrice(){
-
-const res=await fetch(API+"/price?service="+service.value);
-const data=await res.json();
-
-priceBox.innerText="Price: RM "+data.price;
-}
-
-// ================= CHECK IMEI =================
 async function checkIMEI(){
 
 result.innerText="Checking...";
 
-const res=await fetch(API+"/check-imei",{
+const res=await fetch(API+"/check",{
 method:"POST",
 headers:{'Content-Type':'application/json'},
 body:JSON.stringify({
-email:localStorage.email,
 imei:imei.value,
-service:service.value
+service:service.value,
+email:EMAIL
 })
 });
 
-result.innerText=await res.text();
+const data=await res.json();
+
+result.innerText=JSON.stringify(data,null,2);
+
+loadDashboard();
 }
 
-// ================= LOGOUT =================
+/* ================= LOGOUT ================= */
+
 function logout(){
 localStorage.clear();
 location.reload();
 }
 
-// ================= AUTO LOGIN =================
-if(localStorage.email){
-showDashboard(localStorage.balance);
-loadPrice();
+/* AUTO LOGIN */
+if(localStorage.session){
+loadDashboard();
 }
 
 </script>
