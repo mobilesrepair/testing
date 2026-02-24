@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dashboard</title>
+
+<style>
+body{
+font-family:Segoe UI;
+background:#f4f6f9;
+margin:0;
+}
+
+.top{
+background:#0b57d0;
+color:white;
+padding:15px;
+display:flex;
+justify-content:space-between;
+}
+
+.container{
+max-width:500px;
+margin:40px auto;
+background:white;
+padding:25px;
+border-radius:12px;
+box-shadow:0 10px 30px rgba(0,0,0,.1);
+}
+
+input,button{
+width:100%;
+padding:12px;
+margin-top:10px;
+}
+
+button{
+background:#0b57d0;
+color:white;
+border:none;
+border-radius:8px;
+cursor:pointer;
+}
+
+.result{
+margin-top:15px;
+white-space:pre-wrap;
+background:#f1f3f4;
+padding:10px;
+border-radius:8px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="top">
+<div>📱 CheckPhone Dashboard</div>
+<button onclick="logout()">Logout</button>
+</div>
+
+<div class="container">
+
+<h3>Check IMEI</h3>
+
+<input id="imei" placeholder="Enter IMEI">
+<button onclick="checkIMEI()">Check Device</button>
+
+<div class="result" id="result"></div>
+
+</div>
+
+<script>
+
+const API="https://plain-pond-c616.r3dvelvet92.workers.dev";
+
+// protect page
+if(!localStorage.getItem("email")){
+location="index.html";
+}
+
+async function checkIMEI(){
+
+const res=await fetch(API+"/check-imei",{
+method:"POST",
+headers:{'Content-Type':'application/json'},
+body:JSON.stringify({
+email:localStorage.getItem("email"),
+imei:imei.value
+})
+});
+
+const text=await res.text();
+result.innerText=text;
+}
+
+function logout(){
+localStorage.clear();
+location="index.html";
+}
+
+</script>
+
+</body>
+</html>
