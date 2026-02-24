@@ -1,125 +1,67 @@
 <!DOCTYPE html>
 <html>
-<head>
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>CheckPhone</title>
+<body style="font-family:sans-serif;text-align:center">
 
-<style>
-body{
-font-family:Segoe UI;
-background:#f4f6f9;
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
-}
+<h2>Register</h2>
+<input id="rEmail" placeholder="Email">
+<button onclick="register()">Register</button>
 
-.card{
-background:white;
-padding:25px;
-border-radius:12px;
-width:340px;
-box-shadow:0 10px 30px rgba(0,0,0,.1);
-text-align:center;
-}
-
-input,button{
-width:100%;
-padding:12px;
-margin-top:10px;
-}
-
-button{
-background:#0b57d0;
-color:white;
-border:none;
-border-radius:8px;
-cursor:pointer;
-}
-
-.result{
-margin-top:15px;
-text-align:left;
-font-size:14px;
-white-space:pre-wrap;
-}
-</style>
-</head>
-
-<body>
-
-<div class="card">
-
-<h3>Login OTP</h3>
-
-<input id="email" placeholder="Email">
-<button onclick="sendOTP()">Send OTP</button>
-
-<input id="otp" placeholder="OTP">
-<button onclick="login()">Login</button>
+<input id="rOtp" placeholder="OTP">
+<button onclick="verifyRegister()">Verify</button>
 
 <hr>
 
-<h3>Check IMEI</h3>
+<h2>Login</h2>
+<input id="lEmail" placeholder="Email">
+<button onclick="login()">Send Login OTP</button>
 
-<input id="imei" placeholder="IMEI">
-<button onclick="checkIMEI()">Check</button>
-
-<div class="result" id="result"></div>
-
-</div>
+<input id="lOtp" placeholder="OTP">
+<button onclick="verifyLogin()">Login</button>
 
 <script>
 
 const API="https://plain-pond-c616.r3dvelvet92.workers.dev";
 
-async function sendOTP(){
-
-const res = await fetch(API+"/send-otp",{
+async function register(){
+const r=await fetch(API+"/register",{
 method:"POST",
 headers:{'Content-Type':'application/json'},
-body:JSON.stringify({email:email.value})
+body:JSON.stringify({email:rEmail.value})
 });
+const d=await r.json();
+alert("REGISTER OTP: "+d.otp);
+}
 
-const data = await res.json();
-alert("OTP: "+data.otp);
+async function verifyRegister(){
+await fetch(API+"/verify-register",{
+method:"POST",
+headers:{'Content-Type':'application/json'},
+body:JSON.stringify({email:rEmail.value,otp:rOtp.value})
+});
+alert("Account Verified");
 }
 
 async function login(){
-
-const res = await fetch(API+"/verify-otp",{
+const r=await fetch(API+"/login",{
 method:"POST",
 headers:{'Content-Type':'application/json'},
-body:JSON.stringify({
-email:email.value,
-otp:otp.value
-})
+body:JSON.stringify({email:lEmail.value})
 });
-
-if(!res.ok){
-alert("Login failed");
-return;
+const d=await r.json();
+alert("LOGIN OTP: "+d.otp);
 }
 
-const data = await res.json();
-
-localStorage.setItem("email",email.value);
-alert("Login success");
-}
-
-async function checkIMEI(){
-
-const res = await fetch(API+"/check-imei",{
+async function verifyLogin(){
+const r=await fetch(API+"/verify-login",{
 method:"POST",
 headers:{'Content-Type':'application/json'},
-body:JSON.stringify({
-email:localStorage.getItem("email"),
-imei:imei.value
-})
+body:JSON.stringify({email:lEmail.value,otp:lOtp.value})
 });
+const d=await r.json();
 
-const text = await res.text();
-result.innerText=text;
+if(d.success){
+alert("LOGIN SUCCESS");
+}
 }
 
 </script>
